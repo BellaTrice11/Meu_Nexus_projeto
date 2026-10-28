@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#54f5ff"/>
+      <stop offset="50%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#ff42dc"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="100" fill="#080b16"/>
+
+  <path d="M256 48 L286 79 L329 68 L348 108 L391 121 L386 164 L421 194 L402 233 L414 276 L378 301 L371 345 L327 353 L299 389 L256 375 L213 389 L185 353 L141 345 L134 301 L98 276 L110 233 L91 194 L126 164 L121 121 L164 108 L183 68 L226 79 Z"
+        fill="none" stroke="url(#neon)" stroke-width="6"/>
+
+  <path d="M163 329 V166 L349 329 V166"
+        fill="none" stroke="url(#neon)" stroke-width="27"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M187 116 L214 85 L240 110 L256 78 L272 110 L298 85 L325 116"
+        fill="none" stroke="#b9a4ff" stroke-width="10"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M164 362 H348" stroke="#54f5ff" stroke-width="5"/>
+
+  <text x="256" y="424" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="35"
+        font-weight="bold" letter-spacing="5" fill="#ffffff">NEXUS</text>
+
+  <text x="256" y="458" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="19"
+        font-weight="bold" letter-spacing="7" fill="#a78bfa">GAMING V2</text>
+</svg>

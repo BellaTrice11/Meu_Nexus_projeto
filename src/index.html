@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS GAMING V2 — Comunidade Gamer</title>
+<style>
+:root{color-scheme:dark;--bg:#090b14;--panel:#111522;--soft:#151a2a;--border:#252b40;--muted:#969db7;--purple:#792cff;--blue:#087cf5;--text:#f4f5ff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #a98aff;outline-offset:2px}
+#app{min-height:100vh;position:relative;overflow:hidden;background:var(--bg);--muted:#969db7}#app:before{content:"";position:absolute;width:430px;height:430px;top:-240px;right:-100px;background:radial-gradient(circle,rgba(121,44,255,.22),transparent 68%);pointer-events:none}
+.topbar{position:sticky;top:0;z-index:10;min-height:74px;display:flex;align-items:center;gap:24px;padding:10px 5.2%;background:rgba(9,11,20,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:11px;min-width:245px}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;font-size:21px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--purple),var(--blue));box-shadow:0 0 24px #792cff4d}.brand-name{font-size:16px;font-weight:900;letter-spacing:1.5px}.brand-name span{color:#9b68ff}
+.search{flex:1;max-width:490px;position:relative}.search input{width:100%;padding:12px 16px 12px 42px;color:#fff;background:var(--panel);border:1px solid var(--border);border-radius:12px;outline:none}.search-icon{position:absolute;left:15px;top:10px;color:#8d95b0}.search input:focus,textarea:focus{border-color:#8752ff;box-shadow:0 0 0 3px #792cff1f}
+.top-actions{display:flex;align-items:center;gap:12px;margin-left:auto}.icon-btn{width:39px;height:39px;border:1px solid var(--border);border-radius:12px;background:var(--panel);color:#c8cbe0;font-size:17px}.avatar{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5f34cb,#087cf5);font-weight:800;border:2px solid #9a6cff;flex-shrink:0}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr) 270px;gap:25px;max-width:1440px;margin:0 auto;padding:27px 4.2% 60px;position:relative}.sidebar{display:flex;flex-direction:column;gap:22px}.nav-card,.side-card,.composer,.post,.welcome,.community-card{background:var(--panel);border:1px solid var(--border);border-radius:17px}.nav-card{padding:12px}.nav-item{display:flex;align-items:center;gap:12px;padding:12px 13px;margin:2px 0;color:#aeb4ce;border-radius:11px;font-size:13px;font-weight:650;border:0;background:transparent;width:100%;text-align:left}.nav-item .nav-icon{width:22px;text-align:center;font-size:17px}.nav-item.active{color:#fff;background:linear-gradient(100deg,#792cff40,#087cf51a);box-shadow:inset 3px 0 #9b68ff}.nav-item:hover{background:#1a2032;color:#fff}.side-title{font-size:10px;color:#727b9c;font-weight:800;letter-spacing:1.5px;padding:0 13px 5px}.mini-community{display:flex;align-items:center;gap:10px;padding:9px 12px;color:#c5c9dd;font-size:12px}.game-icon{display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#24213e;font-size:16px}.mini-community small{display:block;color:var(--muted);margin-top:3px}
+.main{min-width:0}.welcome{padding:24px;margin-bottom:20px;position:relative;overflow:hidden;background:linear-gradient(115deg,#17112b,#111a30 55%,#111522)}.welcome:after{content:"";position:absolute;width:220px;height:220px;right:-55px;top:-75px;border-radius:50%;border:1px solid #9369ff40;box-shadow:0 0 0 24px #9369ff09,0 0 0 50px #9369ff06;pointer-events:none}.eyebrow{color:#a98aff;text-transform:uppercase;font-size:10px;font-weight:850;letter-spacing:2px}h1{font-size:clamp(23px,3vw,31px);letter-spacing:-.8px;margin:10px 0 8px;line-height:1.15}.welcome p{color:#aeb5d0;font-size:13px;margin:0 0 18px;max-width:440px;line-height:1.6}.gradient-text{background:linear-gradient(90deg,#c1a0ff,#61b8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.primary-btn{border:0;padding:11px 15px;border-radius:10px;color:#fff;font-size:12px;font-weight:800;background:linear-gradient(100deg,var(--purple),var(--blue));box-shadow:0 6px 22px #573fff2e}.primary-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.feed-head{display:flex;align-items:center;justify-content:space-between;margin:24px 2px 13px;gap:12px}.feed-head h2{margin:0;font-size:17px}.feed-head select{background:var(--panel);color:#bfc5dd;border:1px solid var(--border);padding:8px 10px;border-radius:9px;font-size:11px}
+.composer{padding:16px;margin-bottom:14px}.composer-top{display:flex;align-items:flex-start;gap:12px}.composer textarea{width:100%;min-height:68px;resize:vertical;background:#0d111e;border:1px solid #242b40;border-radius:11px;color:#fff;padding:12px;outline:none;font-size:13px}.composer-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px}.attach{display:flex;gap:7px;flex-wrap:wrap}.soft-btn{background:#1a2031;color:#aeb8d5;border:1px solid #2a3148;border-radius:9px;padding:8px 10px;font-size:11px}
+.post{padding:17px;margin-bottom:14px}.post-head{display:flex;align-items:center;gap:11px}.post-avatar{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;font-weight:850;color:#fff;background:linear-gradient(135deg,#7a39e6,#177be6);flex-shrink:0}.post-avatar.green{background:linear-gradient(135deg,#13a77c,#087cf5)}.post-avatar.orange{background:linear-gradient(135deg,#f97316,#9333ea)}.post-user{font-size:12px;font-weight:800}.post-meta{color:#7e87a5;font-size:10px;margin-top:4px}.badge{margin-left:5px;color:#a98aff;font-size:9px;border:1px solid #50377f;border-radius:5px;padding:3px 5px}.post-menu{margin-left:auto;color:#737c9c;background:transparent;border:0;font-size:20px}.post-copy{color:#c9cee1;font-size:13px;line-height:1.65;margin:15px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.game-preview{min-height:135px;border-radius:12px;display:flex;align-items:end;padding:17px;margin:12px 0;overflow:hidden;position:relative;background:radial-gradient(circle at 80% 20%,#26abff5c,transparent 26%),linear-gradient(120deg,#17163a,#102a40 55%,#111522);border:1px solid #293653}.game-preview.purple{background:radial-gradient(circle at 80% 20%,#b445ff66,transparent 27%),linear-gradient(120deg,#25143d,#211b49 55%,#111522)}.game-preview.greenish{background:radial-gradient(circle at 80% 20%,#2fdd923d,transparent 27%),linear-gradient(120deg,#112c2b,#163a42 55%,#111522)}.preview-label{position:relative;z-index:1}.preview-label small{display:block;color:#b7c6e9;font-size:9px;text-transform:uppercase;letter-spacing:1.7px}.preview-label strong{display:block;font-size:21px;margin-top:5px}.preview-emoji{position:absolute;right:22px;top:15px;font-size:58px;filter:drop-shadow(0 7px 22px #0006)}
+.post-actions{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}.action-btn{background:transparent;border:1px solid transparent;color:#9099b7;padding:7px 9px;border-radius:8px;font-size:11px}.action-btn:hover,.action-btn.liked{background:#792cff1f;border-color:#48306e;color:#bd9aff}
+.right-col{display:flex;flex-direction:column;gap:18px}.side-card{padding:17px}.card-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:13px;font-weight:850;gap:8px}.link-btn{border:0;background:transparent;color:#a98aff;font-size:10px}.community-card{padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:9px;background:#0e121f}.community-card:last-child{margin-bottom:0}.community-card .game-icon{width:39px;height:39px;font-size:20px;flex-shrink:0}.community-name{font-size:11px;font-weight:800}.community-count{font-size:9px;color:#858eac;margin-top:4px}.join-btn{margin-left:auto;border:1px solid #50377f;color:#b99aff;background:#211733;border-radius:7px;padding:6px 8px;font-size:10px;white-space:nowrap}.join-btn.joined{color:#8edfc5;background:#112b29;border-color:#24574b}.online-row{display:flex;align-items:center;gap:9px;margin:12px 0}.online-avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#2a2b48;font-size:12px;position:relative}.online-avatar:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#39d98a;border:2px solid #111522;right:-1px;bottom:0}.online-name{font-size:11px;font-weight:750}.online-game{font-size:9px;color:#8d96b3;margin-top:3px}.online-dot{margin-left:auto;color:#54dca0;font-size:9px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:#0e121f;border:1px solid var(--border);border-radius:11px;padding:13px}.stat strong{display:block;font-size:19px;background:linear-gradient(90deg,#bd92ff,#62baff);-webkit-background-clip:text;background-clip:text;color:transparent}.stat span{font-size:9px;color:#8f98b5;display:block;margin-top:4px}
+.extra-view{background:var(--panel);border:1px solid #292f49;border-radius:16px;padding:25px;margin:12px 0;color:#fff;min-height:250px}.extra-view .view-icon{font-size:42px;margin-bottom:12px}.extra-view h2{font-size:24px;margin:0 0 10px}.extra-view p{color:#aab2ca;line-height:1.7;font-size:13px}.view-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:18px}.view-card{background:#0e121f;border:1px solid #252b40;border-radius:12px;padding:14px}.view-card strong{display:block;margin-bottom:6px;font-size:13px}.view-card span{font-size:11px;color:#9da6c2;line-height:1.5}.view-card button{margin-top:10px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#20253a;color:#fff;border:1px solid #4a3b71;padding:12px 16px;border-radius:12px;font-size:12px;z-index:50;transition:.25s;box-shadow:0 12px 35px #0008;max-width:calc(100vw - 30px);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}.mobile-nav{display:none}
+@media(max-width:1120px){.layout{grid-template-columns:190px minmax(0,1fr)}.right-col{display:none}.brand{min-width:215px}}
+@media(max-width:720px){.topbar{min-height:62px;padding:10px 15px;gap:10px}.brand{min-width:0;gap:8px}.brand-mark{width:33px;height:33px;border-radius:10px;font-size:18px}.brand-name{font-size:12px;letter-spacing:.8px}.search{max-width:none}.search input{padding:10px 9px 10px 31px;font-size:11px}.search-icon{left:10px;top:9px;font-size:12px}.top-actions{gap:6px}.top-actions .icon-btn{display:none}.avatar{width:32px;height:32px;font-size:12px}.layout{display:block;padding:17px 12px 85px}.sidebar{display:none}.welcome{padding:21px 18px;border-radius:15px}.welcome:after{right:-120px}.welcome p{font-size:12px;max-width:290px}.composer{padding:12px}.composer-bottom{align-items:flex-end}.soft-btn{padding:7px;font-size:10px}.primary-btn{padding:10px 12px}.post{padding:13px}.game-preview{min-height:120px}.preview-emoji{font-size:48px;right:15px}.mobile-nav{position:fixed;display:flex;bottom:0;left:0;right:0;z-index:20;justify-content:space-around;background:#0c0f1af5;border-top:1px solid var(--border);padding:9px 5px calc(9px + env(safe-area-inset-bottom));backdrop-filter:blur(15px)}.mobile-nav button{background:transparent;border:0;color:#838daa;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;min-width:49px}.mobile-nav button span{font-size:19px}.mobile-nav button.active{color:#b99aff}.extra-view{padding:19px}.extra-view h2{font-size:21px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="topbar">
+  <div class="brand"><div class="brand-mark">N</div><div class="brand-name">NEXUS <span>GAMING V2</span></div></div>
+  <div class="search"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Buscar jogos, jogadores, comunidades..." aria-label="Pesquisar"></div>
+  <div class="top-actions"><button class="icon-btn" aria-label="Notificações" onclick="notify('Suas notificações aparecerão aqui!')">♧</button><button class="icon-btn" aria-label="Mensagens" data-go="Mensagens">✉</button><button class="avatar" aria-label="Abrir perfil" data-go="Perfil">JG</button></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-card">
+      <button class="nav-item active" data-view="Início"><span class="nav-icon">⌂</span> Início</button>
+      <button class="nav-item" data-view="Amigos"><span class="nav-icon">♧</span> Amigos</button>
+      <button class="nav-item" data-view="Jogos"><span class="nav-icon">🎮</span> Meus jogos</button>
+      <button class="nav-item" data-view="Comunidades"><span class="nav-icon">🌐</span> Comunidades</button>
+      <button class="nav-item" data-view="Mensagens"><span class="nav-icon">✉</span> Mensagens</button>
+      <button class="nav-item" data-view="Conquistas"><span class="nav-icon">🏆</span> Conquistas</button>
+      <button class="nav-item" data-view="Perfil"><span class="nav-icon">👤</span> Perfil</button>
+      <button class="nav-item" id="invite-friends" type="button">
+        <span class="nav-icon">📨</span> Convidar amigos
+      </button>
+
+    </div>
+    <div><div class="side-title">SUAS COMUNIDADES</div>
+      <div class="mini-community"><div class="game-icon">⛏️</div><div>Minecraft Brasil<small>12,4 mil membros</small></div></div>
+      <div class="mini-community"><div class="game-icon">🗡️</div><div>Guerreiros de Hyrule<small>8,2 mil membros</small></div></div>
+      <div class="mini-community"><div class="game-icon">🚗</div><div>GTA V Brasil<small>21,8 mil membros</small></div></div>
+      <button class="nav-item" data-view="Comunidades" style="color:#a98aff;margin-top:5px">＋ Explorar comunidades</button>
+    </div>
+  </aside>
+  <main class="main" id="mainContent">
+    <section class="welcome" id="welcome">
+      <div class="eyebrow">Sua próxima aventura começa aqui</div><h1>O seu mundo.<br><span class="gradient-text">A sua comunidade.</span></h1>
+      <p>Encontre jogadores, compartilhe suas conquistas e faça parte de comunidades que vivem os mesmos jogos que você.</p>
+      <button class="primary-btn" id="createPostBtn">＋ Criar publicação</button>
+    </section>
+    <div class="feed-head" id="feedHead"><h2 id="feedTitle">Feed da comunidade</h2><select id="feedSort" aria-label="Ordenar feed"><option value="recent">Mais recentes</option><option value="popular">Mais populares</option></select></div>
+    <section class="composer" id="composer">
+      <div class="composer-top"><div class="avatar">JG</div><textarea id="composerText" maxlength="500" placeholder="E aí, jogador... qual é a boa de hoje?"></textarea></div>
+      <div class="composer-bottom"><div class="attach"><button class="soft-btn" onclick="notify('O envio de imagens será adicionado na próxima etapa.')">▧ Foto</button><button class="soft-btn" onclick="notify('A marcação de jogos será adicionada em breve.')">🎮 Marcar jogo</button></div><button class="primary-btn" id="publishBtn">Publicar ↗</button></div>
+    </section>
+    <div id="feed">
+      <article class="post" data-post-id="sample_minecraft" data-base-likes="128" data-likes="128" data-search="minecraft construção castelo survival">
+        <div class="post-head"><div class="post-avatar green">PX</div><div><div class="post-user">PixelWarrior <span class="badge">LVL 28</span></div><div class="post-meta">Na comunidade Minecraft Brasil · há 12 min</div></div><button class="post-menu" aria-label="Mais opções" onclick="notify('Mais opções estarão disponíveis em breve.')">···</button></div>
+        <div class="post-copy">Depois de 3 dias construindo, finalmente terminei meu castelo no survival! ⛏️🔥 O que vocês acham? Próximo projeto: uma cidade inteira!</div><div class="game-preview"><div class="preview-label"><small>Construção da comunidade</small><strong>MEU NOVO MUNDO</strong></div><div class="preview-emoji">🏰</div></div>
+        <div class="post-actions"><button class="action-btn" onclick="likePost(this)">♡ Curtir <span>128</span></button><button class="action-btn" onclick="commentPost(this)">▢ Comentar</button><button class="action-btn" onclick="notify('Compartilhamento online estará disponível quando criarmos as contas.')">↗ Compartilhar</button></div><div class="comment-area" hidden></div>
+      </article>
+      <article class="post" data-post-id="sample_zelda" data-base-likes="86" data-likes="86" data-search="zelda tears kingdom hyrule jogo aventura">
+        <div class="post-head"><div class="post-avatar orange">HY</div><div><div class="post-user">HeroOfHyrule <span class="badge">LVL 19</span></div><div class="post-meta">Na comunidade Guerreiros de Hyrule · há 34 min</div></div><button class="post-menu" aria-label="Mais opções" onclick="notify('Mais opções estarão disponíveis em breve.')">···</button></div>
+        <div class="post-copy">Aquela sensação de descobrir uma área secreta em Hyrule pela primeira vez é simplesmente incrível. 🗡️✨ Qual jogo da franquia vocês mais gostam?</div><div class="game-preview purple"><div class="preview-label"><small>Discussão em destaque</small><strong>AVENTURAS EM HYRULE</strong></div><div class="preview-emoji">🗡️</div></div>
+        <div class="post-actions"><button class="action-btn" onclick="likePost(this)">♡ Curtir <span>86</span></button><button class="action-btn" onclick="commentPost(this)">▢ Comentar</button><button class="action-btn" onclick="notify('Compartilhamento online estará disponível quando criarmos as contas.')">↗ Compartilhar</button></div><div class="comment-area" hidden></div>
+      </article>
+      <article class="post" data-post-id="sample_gta" data-base-likes="54" data-likes="54" data-search="gta online corrida amigos jogo">
+        <div class="post-head"><div class="post-avatar">GT</div><div><div class="post-user">NightRacer <span class="badge">LVL 12</span></div><div class="post-meta">Na comunidade GTA V Brasil · há 1 h</div></div><button class="post-menu" aria-label="Mais opções" onclick="notify('Mais opções estarão disponíveis em breve.')">···</button></div>
+        <div class="post-copy">Procurando uma galera tranquila pra fazer umas corridas no GTA Online hoje à noite. Quem anima? 🏎️💨</div><div class="game-preview greenish"><div class="preview-label"><small>Encontre sua party</small><strong>BORA JOGAR?</strong></div><div class="preview-emoji">🏎️</div></div>
+        <div class="post-actions"><button class="action-btn" onclick="likePost(this)">♡ Curtir <span>54</span></button><button class="action-btn" onclick="commentPost(this)">▢ Comentar</button><button class="action-btn" onclick="notify('Compartilhamento online estará disponível quando criarmos as contas.')">↗ Compartilhar</button></div><div class="comment-area" hidden></div>
+      </article>
+    </div>
+  </main>
+  <aside class="right-col" id="rightCol">
+    <section class="side-card"><div class="card-heading">🔥 Comunidades em alta <button class="link-btn" data-go="Comunidades">Ver todas</button></div>
+      <div class="community-card" data-community="Minecraft Brasil"><div class="game-icon">⛏️</div><div><div class="community-name">Minecraft Brasil</div><div class="community-count">12,4 mil membros</div></div><button class="join-btn" onclick="joinCommunity(this)">+ Entrar</button></div>
+      <div class="community-card" data-community="Guerreiros de Hyrule"><div class="game-icon">🗡️</div><div><div class="community-name">Guerreiros de Hyrule</div><div class="community-count">8,2 mil membros</div></div><button class="join-btn" onclick="joinCommunity(this)">+ Entrar</button></div>
+      <div class="community-card" data-community="GTA V Brasil"><div class="game-icon">🚗</div><div><div class="community-name">GTA V Brasil</div><div class="community-count">21,8 mil membros</div></div><button class="join-btn" onclick="joinCommunity(this)">+ Entrar</button></div>
+    </section>
+    <section class="side-card"><div class="card-heading">🟢 Jogadores online <button class="link-btn" data-go="Amigos">Ver amigos</button></div>
+      <div class="online-row"><div class="online-avatar">L</div><div><div class="online-name">Luna.exe</div><div class="online-game">Jogando Valorant</div></div><span class="online-dot">●</span></div>
+      <div class="online-row"><div class="online-avatar">R</div><div><div class="online-name">RafaCraft</div><div class="online-game">Jogando Minecraft</div></div><span class="online-dot">●</span></div>
+      <div class="online-row"><div class="online-avatar">M</div><div><div class="online-name">MikaGG</div><div class="online-game">Jogando Fortnite</div></div><span class="online-dot">●</span></div>
+    </section>
+    <section class="side-card"><div class="card-heading">📊 A comunidade</div><div class="stats"><div class="stat"><strong>2,8k</strong><span>Jogadores</span></div><div class="stat"><strong>146</strong><span>Online agora</span></div><div class="stat"><strong id="postStat">320</strong><span>Publicações</span></div><div class="stat"><strong>58</strong><span>Comunidades</span></div></div></section>
+  </aside>
+</div>
+<nav class="mobile-nav" aria-label="Navegação móvel">
+  <button class="active" data-view="Início"><span>⌂</span>Início</button><button data-view="Amigos"><span>♧</span>Amigos</button><button data-view="Comunidades"><span>🌐</span>Comunidades</button><button data-view="Mensagens"><span>✉</span>Mensagens</button><button data-view="Perfil"><span>👤</span>Perfil</button>
+</nav>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const toast = document.getElementById('toast');
+let toastTimer;
+const STORAGE_KEY = 'nexusGamingV2';
+let appState = { posts: [], likes: {}, comments: {}, joined: {}, games: [] };
+
+function notify(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+}
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) appState = { ...appState, ...JSON.parse(saved) };
+  } catch (error) { console.warn('Não foi possível carregar os dados salvos.', error); }
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); }
+  catch (error) { notify('Não foi possível salvar os dados neste dispositivo.'); }
+}
+function safeText(value) {
+  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function getBaseLikes(post) {
+  return Number(post.dataset.baseLikes || post.dataset.likes || 0);
+}
+function likePost(button) {
+  const post = button.closest('.post');
+  const id = post.dataset.postId;
+  if (!id) return;
+  appState.likes[id] = !appState.likes[id];
+  const liked = appState.likes[id];
+  const count = button.querySelector('span');
+  button.classList.toggle('liked', liked);
+  button.firstChild.textContent = liked ? '♥ Curtido ' : '♡ Curtir ';
+  count.textContent = String(getBaseLikes(post) + (liked ? 1 : 0));
+  post.dataset.likes = String(getBaseLikes(post) + (liked ? 1 : 0));
+  saveState();
+}
+function commentPost(button) {
+  const post = button.closest('.post');
+  const area = post.querySelector('.comment-area');
+  area.hidden = !area.hidden;
+  if (!area.hidden && !area.querySelector('.comment-input-row')) {
+    area.innerHTML = '<div class="comment-input-row" style="display:flex;gap:8px;margin-top:12px"><input aria-label="Escreva um comentário" placeholder="Escreva um comentário..." style="flex:1;min-width:0;background:#0d111e;border:1px solid #2a3148;border-radius:9px;color:white;padding:10px;font-size:12px"><button class="primary-btn" style="padding:8px 10px" onclick="sendComment(this)">Enviar</button></div><div class="comments-list"></div>';
+    renderComments(post);
+  }
+}
+function renderComments(post) {
+  const list = post.querySelector('.comments-list');
+  if (!list) return;
+  list.replaceChildren();
+  (appState.comments[post.dataset.postId] || []).forEach(comment => {
+    const item = document.createElement('p');
+    item.style.cssText = 'font-size:12px;color:#cbd0e3;background:#0d111e;border-radius:8px;padding:10px;margin:8px 0 0;overflow-wrap:anywhere';
+    item.textContent = 'Você: ' + comment;
+    list.appendChild(item);
+  });
+}
+function sendComment(button) {
+  const post = button.closest('.post');
+  const input = button.parentElement.querySelector('input');
+  const text = input.value.trim();
+  if (!text) { notify('Escreva um comentário primeiro.'); input.focus(); return; }
+  const id = post.dataset.postId;
+  if (!appState.comments[id]) appState.comments[id] = [];
+  appState.comments[id].push(text);
+  saveState(); renderComments(post); input.value = '';
+}
+function joinCommunity(button) {
+  const card = button.closest('[data-community]');
+  const community = card ? card.dataset.community : button.textContent.trim();
+  appState.joined[community] = !appState.joined[community];
+  const joined = appState.joined[community];
+  button.classList.toggle('joined', joined);
+  button.textContent = joined ? '✓ Entrou' : '+ Entrar';
+  saveState();
+  notify(joined ? 'Você entrou nesta comunidade neste dispositivo!' : 'Você saiu da comunidade.');
+}
+function makePostElement(data) {
+  const post = document.createElement('article');
+  post.className = 'post';
+  post.dataset.postId = data.id;
+  post.dataset.baseLikes = String(data.likes || 0);
+  post.dataset.likes = String((data.likes || 0) + (appState.likes[data.id] ? 1 : 0));
+  post.dataset.search = (data.text || '').toLowerCase();
+  const head = document.createElement('div');
+  head.className = 'post-head';
+  head.innerHTML = '<div class="post-avatar">JG</div><div><div class="post-user">Você <span class="badge">NOVO</span></div><div class="post-meta">Na comunidade gamer · ' + safeText(data.time || 'salvo') + '</div></div>';
+  const copy = document.createElement('div');
+  copy.className = 'post-copy';
+  copy.textContent = data.text;
+  const actions = document.createElement('div');
+  actions.className = 'post-actions';
+  actions.innerHTML = '<button class="action-btn" onclick="likePost(this)">♡ Curtir <span>' + (data.likes || 0) + '</span></button><button class="action-btn" onclick="commentPost(this)">▢ Comentar</button><button class="action-btn" onclick="notify(\'Compartilhamento online estará disponível quando criarmos as contas.\')">↗ Compartilhar</button>';
+  const area = document.createElement('div');
+  area.className = 'comment-area';
+  area.hidden = true;
+  post.append(head, copy, actions, area);
+  const likeButton = actions.querySelector('button');
+  likeButton.dataset.baseLikes = String(data.likes || 0);
+  if (appState.likes[data.id]) {
+    likeButton.classList.add('liked');
+    likeButton.firstChild.textContent = '♥ Curtido ';
+    likeButton.querySelector('span').textContent = String((data.likes || 0) + 1);
+  }
+  return post;
+}
+function publishPost(text, restoring = false) {
+  const data = { id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7), text, likes: 0, time: 'agora' };
+  document.getElementById('feed').prepend(makePostElement(data));
+  if (!restoring) {
+    appState.posts.unshift(data);
+    saveState();
+  }
+}
+function restoreSavedPosts() {
+  const feed = document.getElementById('feed');
+  (appState.posts || []).slice().reverse().forEach(data => feed.prepend(makePostElement(data)));
+  document.querySelectorAll('#feed .post').forEach(post => {
+    const id = post.dataset.postId;
+    const base = getBaseLikes(post);
+    post.dataset.baseLikes = String(base);
+    post.dataset.likes = String(base + (appState.likes[id] ? 1 : 0));
+    const likeButton = post.querySelector('.action-btn');
+    if (likeButton) {
+      likeButton.dataset.baseLikes = String(base);
+      likeButton.classList.toggle('liked', !!appState.likes[id]);
+      likeButton.firstChild.textContent = appState.likes[id] ? '♥ Curtido ' : '♡ Curtir ';
+      likeButton.querySelector('span').textContent = String(base + (appState.likes[id] ? 1 : 0));
+    }
+    renderComments(post);
+  });
+  document.querySelectorAll('[data-community]').forEach(card => {
+    const key = card.dataset.community;
+    const button = card.querySelector('.join-btn');
+    if (button && appState.joined[key]) {
+      button.classList.add('joined');
+      button.textContent = '✓ Entrou';
+    }
+  });
+  updatePostStat();
+}
+function updatePostStat() {
+  const stat = document.getElementById('postStat');
+  if (stat) stat.textContent = String(320 + (appState.posts || []).length);
+}
+const viewInfo = {
+  'Amigos': {icon:'♧', title:'Meus amigos', text:'Encontre jogadores, acompanhe quem está online e monte sua equipe.', cards:[['Jogadores online','Luna.exe está jogando Valorant.','Ver jogadores'],['RafaCraft','Jogando Minecraft.','Convidar'],['MikaGG','Jogando Fortnite.','Convidar']]},
+  'Jogos': {icon:'🎮', title:'Meus jogos', text:'Sua biblioteca gamer para organizar os jogos que você curte.', cards:[['Minecraft','Construção, sobrevivência e criatividade.','Favorito'],['The Legend of Zelda','Explore Hyrule e descubra segredos.','Favorito'],['GTA Online','Corridas e aventuras com amigos.','Favorito']]},
+  'Comunidades': {icon:'🌐', title:'Explorar comunidades', text:'Encontre sua galera e participe das conversas sobre seus jogos favoritos.', cards:[['⛏️ Minecraft Brasil','12,4 mil membros · Construção e survival.','Entrar'],['🗡️ Guerreiros de Hyrule','8,2 mil membros · Zelda e aventura.','Entrar'],['🚗 GTA V Brasil','21,8 mil membros · Corridas e missões.','Entrar']]},
+  'Mensagens': {icon:'✉', title:'Mensagens', text:'Sua central de conversas com outros jogadores. As mensagens entre usuários serão ativadas quando o aplicativo tiver contas e um servidor.', cards:[['Luna.exe','Última atividade: jogando Valorant.','Abrir conversa'],['RafaCraft','Última atividade: jogando Minecraft.','Abrir conversa']]},
+  'Conquistas': {icon:'🏆', title:'Minhas conquistas', text:'Acompanhe seu progresso e celebre suas vitórias gamer.', cards:[['Primeiro passo','Você começou sua jornada no NEXUS.','Conquista inicial'],['Criador de conteúdo','Publique sua primeira mensagem.','Continue jogando'],['Espírito de equipe','Entre em uma comunidade gamer.','Jogue junto']]},
+  'Perfil': {icon:'👤', title:'Meu perfil gamer', text:'Este é o espaço do seu perfil. Personalização e contas online serão adicionadas em uma próxima etapa.', cards:[['Nome de jogador','JG · Perfil local neste dispositivo.','Editar em breve'],['Publicações','Suas publicações ficam salvas neste dispositivo.','Ver publicações'],['Comunidades','Entre em comunidades para montar sua lista.','Explorar']] }
+};
+function showView(view) {
+  const main = document.getElementById('mainContent');
+  const welcome = document.getElementById('welcome');
+  const feedHead = document.getElementById('feedHead');
+  const composer = document.getElementById('composer');
+  const feed = document.getElementById('feed');
+  const right = document.getElementById('rightCol');
+  document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+  document.querySelectorAll('.extra-view').forEach(node => node.remove());
+  if (view === 'Início') {
+    welcome.hidden = false; feedHead.hidden = false; composer.hidden = false; feed.hidden = false;
+    if (right) right.hidden = false;
+    document.getElementById('feedTitle').textContent = 'Feed da comunidade';
+    document.querySelectorAll('#feed .post').forEach(post => post.style.display = '');
+    document.getElementById('searchInput').value = '';
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  welcome.hidden = true; feedHead.hidden = true; composer.hidden = true; feed.hidden = true;
+  if (right) right.hidden = true;
+  const info = viewInfo[view];
+  if (!info) return;
+  const page = document.createElement('section');
+  page.className = 'extra-view';
+  const icon = document.createElement('div'); icon.className = 'view-icon'; icon.textContent = info.icon;
+  const title = document.createElement('h2'); title.textContent = info.title;
+  const description = document.createElement('p'); description.textContent = info.text;
+  const cards = document.createElement('div'); cards.className = 'view-list';
+  info.cards.forEach((item, index) => {
+    const card = document.createElement('div'); card.className = 'view-card';
+    const heading = document.createElement('strong'); heading.textContent = item[0];
+    const detail = document.createElement('span'); detail.textContent = item[1];
+    const action = document.createElement('button'); action.className = 'primary-btn'; action.textContent = item[2]; action.style.fontSize = '10px'; action.style.padding = '8px 10px';
+    action.addEventListener('click', () => {
+      if (view === 'Comunidades') {
+        const key = item[0].replace(/^[^\wÀ-ÿ]+\s*/, '');
+        appState.joined[key] = !appState.joined[key];
+        saveState();
+        action.textContent = appState.joined[key] ? '✓ Entrou' : 'Entrar';
+        notify(appState.joined[key] ? 'Você entrou na comunidade neste dispositivo!' : 'Você saiu da comunidade.');
+      } else if (view === 'Jogos' && item[2] === 'Favorito') {
+        if (!appState.games.includes(item[0])) appState.games.push(item[0]);
+        else appState.games = appState.games.filter(game => game !== item[0]);
+        saveState();
+        action.textContent = appState.games.includes(item[0]) ? '★ Favoritado' : 'Favorito';
+        notify(appState.games.includes(item[0]) ? 'Jogo adicionado aos favoritos!' : 'Jogo removido dos favoritos.');
+      } else if (view === 'Perfil' && item[2] === 'Ver publicações') {
+        showView('Início');
+      } else {
+        notify('Esta função será conectada em uma próxima etapa.');
+      }
+    });
+    if (view === 'Comunidades' && appState.joined[item[0].replace(/^[^\wÀ-ÿ]+\s*/, '')]) action.textContent = '✓ Entrou';
+    if (view === 'Jogos' && appState.games.includes(item[0])) action.textContent = '★ Favoritado';
+    card.append(heading, detail, action); cards.appendChild(card);
+  });
+  page.append(icon, title, description, cards);
+  main.appendChild(page);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
+document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => showView(button.dataset.go)));
+document.getElementById('createPostBtn').addEventListener('click', () => {
+  showView('Início');
+  document.getElementById('composerText').focus();
+  document.getElementById('composer').scrollIntoView({behavior:'smooth',block:'center'});
+});
+document.getElementById('publishBtn').addEventListener('click', () => {
+  const input = document.getElementById('composerText');
+  const value = input.value.trim();
+  if (!value) { notify('Escreva algo antes de publicar.'); input.focus(); return; }
+  publishPost(value);
+  input.value = '';
+  updatePostStat();
+  notify('Publicação salva neste dispositivo!');
+  document.getElementById('feed').firstElementChild?.scrollIntoView({behavior:'smooth',block:'center'});
+});
+document.getElementById('searchInput').addEventListener('input', event => {
+  const query = event.target.value.toLowerCase().trim();
+  document.querySelectorAll('#feed .post').forEach(post => {
+    const text = (post.innerText + ' ' + (post.dataset.search || '')).toLowerCase();
+    post.style.display = text.includes(query) ? '' : 'none';
+  });
+});
+document.getElementById('feedSort').addEventListener('change', event => {
+  const feed = document.getElementById('feed');
+  const posts = [...feed.querySelectorAll('.post')];
+  if (event.target.value === 'popular') posts.sort((a,b) => Number(b.dataset.likes || 0) - Number(a.dataset.likes || 0));
+  else posts.sort((a,b) => {
+    const aNew = a.dataset.postId.startsWith('p_') ? 1 : 0;
+    const bNew = b.dataset.postId.startsWith('p_') ? 1 : 0;
+    return bNew - aNew;
+  });
+  posts.forEach(post => feed.appendChild(post));
+});
+
+
+
+loadState();
+restoreSavedPosts();
+
+
+document.getElementById('invite-friends')?.addEventListener('click', function () {
+  const linkDownload = 'https://github.com/BellaTrice11/Meu_Nexus_projeto/releases/tag/dev';
+
+  const mensagem =
+    '🎮🔥 VOCÊ FOI CONVIDADO PARA O NEXUS GAMING V2! 🔥🎮\n\n' +
+    'Fala, gamer! 💜 Bora fazer parte da nossa comunidade gamer?\n\n' +
+    '🚀 Baixe e instale o NEXUS GAMING V2 pelo link abaixo:\n\n' +
+    linkDownload + '\n\n' +
+    'Chame seus amigos e bora jogar juntos! 🕹️💜\n\n' +
+    'NEXUS GAMING V2 — Nossa comunidade, nossa diversão!';
+
+  window.location.href =
+    'https://wa.me/?text=' + encodeURIComponent(mensagem);
+});
+
+
+
+</script>
+
+<div id="nexus-auth" style="display:none; position:fixed; inset:0; z-index:9999; background:#080814; color:white; align-items:center; justify-content:center; font-family:Arial,sans-serif; padding:20px; box-sizing:border-box;">
+  <div style="width:100%; max-width:390px; padding:30px; box-sizing:border-box; border:1px solid #793cff; border-radius:20px; background:#121225; box-shadow:0 0 35px #682aff44;">
+    <h1 style="text-align:center; color:#a879ff; margin-top:0;">NEXUS GAMING</h1>
+    <p style="text-align:center; color:#b8b4ce;">Entre no seu universo gamer</p>
+
+    <div style="display:flex; gap:10px; margin:25px 0;">
+      <button type="button" id="nexus-tab-login" style="flex:1; padding:12px; border:0; border-radius:8px; background:#793cff; color:white; cursor:pointer;">Entrar</button>
+      <button type="button" id="nexus-tab-register" style="flex:1; padding:12px; border:1px solid #793cff; border-radius:8px; background:transparent; color:white; cursor:pointer;">Criar conta</button>
+    </div>
+
+    <form id="nexus-auth-form">
+      <label for="nexus-email">E-mail</label>
+      <input id="nexus-email" type="email" autocomplete="email" required placeholder="seu@email.com" style="display:block; width:100%; box-sizing:border-box; padding:13px; margin:8px 0 18px; border:1px solid #393454; border-radius:8px; background:#090916; color:white;">
+
+      <label for="nexus-password">Senha</label>
+      <input id="nexus-password" type="password" autocomplete="current-password" required minlength="6" placeholder="Mínimo de 6 caracteres" style="display:block; width:100%; box-sizing:border-box; padding:13px; margin:8px 0 18px; border:1px solid #393454; border-radius:8px; background:#090916; color:white;">
+
+      <button id="nexus-submit" type="submit" style="width:100%; padding:14px; border:0; border-radius:8px; background:linear-gradient(90deg,#793cff,#2678ff); color:white; font-weight:bold; cursor:pointer;">Entrar na Nexus</button>
+      <p id="nexus-auth-message" role="status" style="color:#cbb7ff; text-align:center;"></p>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
