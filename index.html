@@ -806,8 +806,11 @@ body {
   </div>
 </div>
 
+
 <script type="module">
 import { supabase } from './src/supabase.js';
+
+console.log('NEXUS: SCRIPT CARREGADO!');
 
 const auth = document.getElementById('nexus-auth');
 const form = document.getElementById('nexus-auth-form');
@@ -830,6 +833,9 @@ const siteUrl = 'https://bellatrice11.github.io/Meu_Nexus_projeto/';
 
 let mode = 'login';
 
+// Guarda o e-mail usado para solicitar a recuperação.
+let recoveryEmail = '';
+
 function setMode(newMode) {
   mode = newMode;
 
@@ -849,7 +855,9 @@ function setMode(newMode) {
     ? 'new-password'
     : 'current-password';
 
-  emailInput.disabled = resetting;
+  // O campo de e-mail permanece habilitado.
+  emailInput.disabled = false;
+  emailInput.required = true;
 
   if (resetting) {
     subtitle.textContent = 'Crie sua nova senha';
@@ -857,6 +865,12 @@ function setMode(newMode) {
     forgotButton.hidden = true;
     switchButton.hidden = true;
     confirmInput.placeholder = 'Digite a nova senha novamente';
+
+    // Recupera o e-mail da sessão, se disponível.
+    if (recoveryEmail) {
+      emailInput.value = recoveryEmail;
+    }
+
   } else if (registering) {
     subtitle.textContent = 'Crie sua conta gamer';
     submitButton.textContent = 'CRIAR MINHA CONTA';
@@ -864,12 +878,14 @@ function setMode(newMode) {
     switchButton.hidden = false;
     switchButton.textContent = 'Já tenho uma conta';
     confirmInput.placeholder = 'Digite a senha novamente';
+
   } else if (forgot) {
     subtitle.textContent = 'Vamos recuperar seu acesso';
     submitButton.textContent = 'ENVIAR LINK DE RECUPERAÇÃO';
     forgotButton.hidden = true;
     switchButton.hidden = false;
     switchButton.textContent = 'Voltar para o login';
+
   } else {
     subtitle.textContent = 'Entre no seu universo gamer';
     submitButton.textContent = 'ENTRAR NA NEXUS';
@@ -936,9 +952,16 @@ form.addEventListener('submit', async (event) => {
         message.textContent =
           'Cadastro iniciado! Confira seu e-mail e confirme sua conta antes de entrar.';
       }
+
     } else if (mode === 'forgot') {
+
+      // Guarda exatamente o e-mail solicitado.
+      recoveryEmail = email;
+      emailInput.value = recoveryEmail;
+      emailInput.disabled = false;
+
       const { error } = await supabase.auth.resetPasswordForEmail(
-        email,
+        recoveryEmail,
         { redirectTo: siteUrl }
       );
 
@@ -946,7 +969,9 @@ form.addEventListener('submit', async (event) => {
 
       message.textContent =
         'Se esse e-mail estiver cadastrado, você receberá um link de recuperação. Confira também o spam.';
+
     } else if (mode === 'reset') {
+
       if (password !== confirmation) {
         throw new Error('As senhas não são iguais.');
       }
@@ -966,11 +991,15 @@ form.addEventListener('submit', async (event) => {
 
       passwordInput.value = '';
       confirmInput.value = '';
+      recoveryEmail = '';
       emailInput.disabled = false;
       setMode('login');
+
       message.textContent =
         'Senha alterada com sucesso! Entre com sua nova senha. 💜';
+
     } else {
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -979,26 +1008,41 @@ form.addEventListener('submit', async (event) => {
       if (error) throw error;
 
       message.textContent = 'Login realizado! Bem-vindo à Nexus! 🎮';
-
       auth.style.display = 'none';
     }
+
   } catch (error) {
     message.textContent =
       'Não foi possível concluir: ' + error.message;
+
   } finally {
     submitButton.disabled = false;
   }
 });
 
-// O link de recuperação retorna ao site e permite cadastrar uma nova senha.
-supabase.auth.onAuthStateChange((event) => {
+// Reconhece o link de recuperação do Supabase.
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('Evento Supabase:', event);
+
   if (event === 'PASSWORD_RECOVERY') {
     auth.style.display = 'flex';
-    emailInput.value = '';
+
+    // Prioriza o e-mail da sessão; usa o e-mail guardado como alternativa.
+    recoveryEmail = session?.user?.email || recoveryEmail;
+
     setMode('reset');
-    message.textContent = 'Link validado! Digite sua nova senha.';
+
+    emailInput.disabled = false;
+
+    if (recoveryEmail) {
+      emailInput.value = recoveryEmail;
+    }
+
+    message.textContent =
+      'Link validado! Digite sua nova senha.';
   }
 });
 </script>
+
 </body>
 </html>
