@@ -382,25 +382,426 @@ document.getElementById('invite-friends')?.addEventListener('click', function ()
 
 </script>
 
-<div id="nexus-auth" style="display:flex; position:fixed; inset:0; z-index:9999; background:#080814; color:white; align-items:center; justify-content:center; font-family:Arial,sans-serif; padding:20px; box-sizing:border-box;">
-  <div style="width:100%; max-width:390px; padding:30px; box-sizing:border-box; border:1px solid #793cff; border-radius:20px; background:#121225; box-shadow:0 0 35px #682aff44;">
-    <h1 style="text-align:center; color:#a879ff;">NEXUS GAMING</h1>
-    <p style="text-align:center; color:#b8b4ce;">Entre no seu universo gamer</p>
+<style>
+  /* CONFIGURAÇÃO GERAL */
+  #nexus-auth,
+  #nexus-auth * {
+    box-sizing: border-box;
+  }
 
-    <div style="display:flex; gap:10px; margin:25px 0;">
-      <button type="button" id="nexus-tab-login" style="flex:1; padding:12px; border:0; border-radius:8px; background:#793cff; color:white;">Entrar</button>
-      <button type="button" id="nexus-tab-register" style="flex:1; padding:12px; border:1px solid #793cff; border-radius:8px; background:transparent; color:white;">Criar conta</button>
-    </div>
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    overflow: hidden;
+  }
+
+  /* FUNDO DA TELA */
+  #nexus-auth {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px;
+
+    color: #f7f3ff;
+    font-family: Arial, sans-serif;
+
+    background-image:
+      linear-gradient(
+        rgba(8, 7, 17, 0.25),
+        rgba(8, 7, 17, 0.40)
+      ),
+      url("./src/img/nexus_background_16x9.jpe");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #080711;
+  }
+
+  /* CARTÃO DE LOGIN TRANSPARENTE */
+  #nexus-auth .nexus-card {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    padding: 28px 30px;
+
+    border: 1px solid rgba(190, 145, 255, 0.40);
+    border-radius: 24px;
+
+    background: rgba(13, 10, 25, 0.38);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    box-shadow:
+      0 0 45px rgba(112, 42, 255, 0.18),
+      inset 0 0 30px rgba(170, 120, 255, 0.08);
+
+    overflow: hidden;
+  }
+
+  /* BRILHO DO CARTÃO */
+  #nexus-auth .nexus-card::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: #853cff;
+    filter: blur(100px);
+    opacity: 0.25;
+
+    pointer-events: none;
+  }
+
+  /* LOGO */
+  #nexus-auth .nexus-logo {
+    position: relative;
+    isolation: isolate;
+
+    margin: 0;
+    padding-top: 210px;
+    min-height: 250px;
+
+    text-align: center;
+    font-size: clamp(27px, 7vw, 36px);
+    letter-spacing: 3px;
+    color: #f0e5ff;
+
+    text-shadow:
+      0 0 18px #a34dff,
+      0 0 35px #633bff;
+
+    /* AURA LILÁS ATRÁS DO N + IMAGEM */
+    background-image:
+      radial-gradient(
+        ellipse at center 42%,
+        rgba(205, 145, 255, 0.42) 0%,
+        rgba(165, 95, 255, 0.25) 30%,
+        rgba(115, 55, 255, 0.10) 55%,
+        transparent 78%
+      ),
+      url("./src/img/Nexus_Login_Logo.png");
+
+    background-repeat: no-repeat;
+    background-size:
+    300px 235px,
+    260px 215px;
+
+    background-position:
+      center top,
+      center top;
+
+    animation: nexusLogoGlow 3s ease-in-out infinite alternate;
+  }
+
+  /* ANIMAÇÃO DO NEON */
+  @keyframes nexusLogoGlow {
+    from {
+      filter:
+        drop-shadow(0 0 5px rgba(199, 4, 196, 0.711));
+    }
+
+    to {
+      filter:
+        drop-shadow(0 0 12px rgba(190, 125, 255, 0.55))
+        drop-shadow(0 0 22px rgba(162, 109, 255, 0.3));
+    }
+  }
+
+  #nexus-auth .nexus-logo::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  #nexus-auth .nexus-logo::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* SUBTÍTULO */
+  #nexus-auth .nexus-subtitle {
+    position: relative;
+    margin: 8px 0 24px;
+    text-align: center;
+    color: #e0d4f5;
+    font-size: 20px;
+  }
+
+  /* CAMPOS */
+  #nexus-auth .nexus-field {
+    margin: 0 0 18px;
+  }
+
+  #nexus-auth label {
+    display: block;
+    margin-bottom: 8px;
+    color: #f0e5ff;
+    font-size: 14px;
+  }
+
+  #nexus-auth input {
+    display: block;
+    width: 100%;
+    padding: 14px;
+
+    border: 1px solid rgba(190, 145, 255, 0.35);
+    border-radius: 10px;
+    outline: none;
+
+    background: rgba(8, 7, 17, 0.55);
+    color: #fff;
+
+    font-size: 15px;
+    transition: 0.25s;
+  }
+
+  #nexus-auth input::placeholder {
+    color: #a99bbf;
+  }
+
+  #nexus-auth input:focus {
+    border-color: #a16bff;
+    background: rgba(8, 7, 17, 0.75);
+    box-shadow: 0 0 14px #8d48ff55;
+  }
+
+  /* BOTÃO PRINCIPAL */
+  #nexus-auth .nexus-main-button {
+    width: 100%;
+    padding: 15px;
+
+    border: 0;
+    border-radius: 10px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+
+    background: linear-gradient(100deg, #853cff, #3868ff);
+    box-shadow: 0 0 25px #753aff55;
+
+    transition: 0.25s;
+  }
+
+  #nexus-auth .nexus-main-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px #753aff90;
+  }
+
+  #nexus-auth .nexus-main-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  /* BOTÕES SECUNDÁRIOS */
+  #nexus-auth .nexus-link-button {
+    display: block;
+    margin: 16px auto 0;
+    padding: 5px;
+
+    border: 0;
+    background: transparent;
+
+    color: #d7baff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  #nexus-auth .nexus-link-button:hover {
+    color: white;
+    text-shadow: 0 0 12px #a16bff;
+  }
+
+  /* MENSAGENS */
+  #nexus-auth .nexus-message {
+    min-height: 20px;
+    margin: 18px 0 0;
+
+    color: #e0d0ff;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* REMOVE AS BARRAS DE ROLAGEM */
+  html,
+  body,
+  #nexus-auth {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html,
+body {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+
+      background-size:
+        250px 195px,
+        210px 165px;
+    }
+  }
+  
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+      background-size: 210px 165px;
+    }
+  }
+  
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+      background-size: 210px 165px;
+    }
+    
+  }
+  
+
+@media (max-width: 480px) {
+  #nexus-auth .nexus-card {
+    padding: 24px 20px;
+  }
+}
+
+</style>
+
+<div id="nexus-auth">
+  <div class="nexus-card">
+    <h1 class="nexus-logo">NEXUS GAMING</h1>
+    <p id="nexus-auth-subtitle" class="nexus-subtitle">
+      Entre no seu universo gamer
+    </p>
 
     <form id="nexus-auth-form">
-      <label for="nexus-email">E-mail</label>
-      <input id="nexus-email" type="email" autocomplete="email" required placeholder="seu@email.com" style="display:block; width:100%; box-sizing:border-box; padding:13px; margin:8px 0 18px; border:1px solid #393454; border-radius:8px; background:#090916; color:white;">
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="nexus-field">
+        <label for="nexus-email">E-mail</label>
+        <input
+          id="nexus-email"
+          type="email"
+          autocomplete="email"
+          placeholder="seu@email.com"
+          required
+        >
+      </div>
 
-      <label for="nexus-password">Senha</label>
-      <input id="nexus-password" type="password" autocomplete="current-password" required minlength="6" placeholder="Mínimo de 6 caracteres" style="display:block; width:100%; box-sizing:border-box; padding:13px; margin:8px 0 18px; border:1px solid #393454; border-radius:8px; background:#090916; color:white;">
+      <div id="nexus-username-field" class="nexus-field" hidden>
+        <label for="nexus-username">Nome de usuário</label>
+        <input
+          id="nexus-username"
+          type="text"
+          autocomplete="username"
+          minlength="3"
+          maxlength="20"
+          pattern="[A-Za-z0-9_]+"
+          placeholder="Ex.: Gamer_123"
+        >
+        <small style="display:block;margin-top:7px;color:#a9a0c2;">
+          Use de 3 a 20 letras, números ou _ (sem espaços).
+        </small>
+      </div>
 
-      <button id="nexus-submit" type="submit" style="width:100%; padding:14px; border:0; border-radius:8px; background:linear-gradient(90deg,#793cff,#2678ff); color:white; font-weight:bold;">Entrar na Nexus</button>
-      <p id="nexus-auth-message" role="status" style="color:#cbb7ff; text-align:center;"></p>
+      <div id="nexus-password-field" class="nexus-field">
+        <label for="nexus-password">Senha</label>
+        <input
+          id="nexus-password"
+          type="password"
+          autocomplete="current-password"
+          minlength="6"
+          placeholder="Minimo de 6 caracteres"
+          required
+        >
+      </div>
+
+      <div id="nexus-confirm-field" class="nexus-field" hidden>
+        <label for="nexus-confirm-password">Confirmar senha</label>
+        <input
+          id="nexus-confirm-password"
+          type="password"
+          autocomplete="new-password"
+          minlength="6"
+          placeholder="Digite a senha novamente"
+        >
+      </div>
+
+      <button id="nexus-submit" class="nexus-main-button" type="submit">
+        ENTRAR NA NEXUS
+      </button>
+
+      <button
+        id="nexus-forgot"
+        class="nexus-link-button"
+        type="button"
+      >
+        Esqueci minha senha
+      </button>
+
+      <button
+        id="nexus-switch"
+        class="nexus-link-button"
+        type="button"
+      >
+        Novo cadastro
+      </button>
+
+      <p id="nexus-auth-message" class="nexus-message" role="status"
+         aria-live="polite"></p>
     </form>
   </div>
 </div>
@@ -408,66 +809,167 @@ document.getElementById('invite-friends')?.addEventListener('click', function ()
 <script type="module">
 import { supabase } from './src/supabase.js';
 
+const auth = document.getElementById('nexus-auth');
 const form = document.getElementById('nexus-auth-form');
-const loginTab = document.getElementById('nexus-tab-login');
-const registerTab = document.getElementById('nexus-tab-register');
-const submitButton = document.getElementById('nexus-submit');
 const emailInput = document.getElementById('nexus-email');
+const usernameInput = document.getElementById('nexus-username');
 const passwordInput = document.getElementById('nexus-password');
+const confirmInput = document.getElementById('nexus-confirm-password');
+
+const usernameField = document.getElementById('nexus-username-field');
+const passwordField = document.getElementById('nexus-password-field');
+const confirmField = document.getElementById('nexus-confirm-field');
+
+const submitButton = document.getElementById('nexus-submit');
+const forgotButton = document.getElementById('nexus-forgot');
+const switchButton = document.getElementById('nexus-switch');
 const message = document.getElementById('nexus-auth-message');
+const subtitle = document.getElementById('nexus-auth-subtitle');
+
+const siteUrl = 'https://bellatrice11.github.io/Meu_Nexus_projeto/';
 
 let mode = 'login';
 
 function setMode(newMode) {
   mode = newMode;
+
   const registering = mode === 'register';
+  const forgot = mode === 'forgot';
+  const resetting = mode === 'reset';
 
-  submitButton.textContent = registering
-    ? 'Criar minha conta'
-    : 'Entrar na Nexus';
+  usernameField.hidden = !registering;
+  confirmField.hidden = !(registering || resetting);
+  passwordField.hidden = forgot;
 
-  passwordInput.autocomplete = registering
+  usernameInput.required = registering;
+  confirmInput.required = registering || resetting;
+  passwordInput.required = !forgot;
+
+  passwordInput.autocomplete = registering || resetting
     ? 'new-password'
     : 'current-password';
 
-  loginTab.style.background = registering ? 'transparent' : '#793cff';
-  registerTab.style.background = registering ? '#793cff' : 'transparent';
+  emailInput.disabled = resetting;
+
+  if (resetting) {
+    subtitle.textContent = 'Crie sua nova senha';
+    submitButton.textContent = 'SALVAR NOVA SENHA';
+    forgotButton.hidden = true;
+    switchButton.hidden = true;
+    confirmInput.placeholder = 'Digite a nova senha novamente';
+  } else if (registering) {
+    subtitle.textContent = 'Crie sua conta gamer';
+    submitButton.textContent = 'CRIAR MINHA CONTA';
+    forgotButton.hidden = true;
+    switchButton.hidden = false;
+    switchButton.textContent = 'Já tenho uma conta';
+    confirmInput.placeholder = 'Digite a senha novamente';
+  } else if (forgot) {
+    subtitle.textContent = 'Vamos recuperar seu acesso';
+    submitButton.textContent = 'ENVIAR LINK DE RECUPERAÇÃO';
+    forgotButton.hidden = true;
+    switchButton.hidden = false;
+    switchButton.textContent = 'Voltar para o login';
+  } else {
+    subtitle.textContent = 'Entre no seu universo gamer';
+    submitButton.textContent = 'ENTRAR NA NEXUS';
+    forgotButton.hidden = false;
+    switchButton.hidden = false;
+    switchButton.textContent = 'Novo cadastro';
+  }
 
   message.textContent = '';
 }
 
-loginTab.addEventListener('click', () => setMode('login'));
-registerTab.addEventListener('click', () => setMode('register'));
+switchButton.addEventListener('click', () => {
+  if (mode === 'login') {
+    setMode('register');
+  } else {
+    setMode('login');
+  }
+});
+
+forgotButton.addEventListener('click', () => {
+  setMode('forgot');
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const email = emailInput.value.trim();
   const password = passwordInput.value;
+  const username = usernameInput.value.trim();
+  const confirmation = confirmInput.value;
 
   submitButton.disabled = true;
   message.textContent = 'Aguarde, gamer...';
 
   try {
-   
-if (mode === 'register') {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: 'https://bellatrice11.github.io/Meu_Nexus_projeto/'
-    }
-  });
+    if (mode === 'register') {
+      if (password !== confirmation) {
+        throw new Error('As senhas não são iguais.');
+      }
 
-  if (error) throw error;
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) {
+        throw new Error(
+          'O usuário deve ter de 3 a 20 letras, números ou _.'
+        );
+      }
 
-  if (data.session) {
-    message.textContent = 'Conta criada e acesso realizado! 💜';
-  } else {
-    message.textContent =
-      'Cadastro iniciado! Confira seu e-mail e confirme a conta antes de entrar.';
-  }
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username: username
+          },
+          emailRedirectTo: siteUrl
+        }
+      });
 
+      if (error) throw error;
+
+      if (data.session) {
+        message.textContent =
+          'Conta criada! Você já pode entrar na Nexus. 💜';
+      } else {
+        message.textContent =
+          'Cadastro iniciado! Confira seu e-mail e confirme sua conta antes de entrar.';
+      }
+    } else if (mode === 'forgot') {
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        email,
+        { redirectTo: siteUrl }
+      );
+
+      if (error) throw error;
+
+      message.textContent =
+        'Se esse e-mail estiver cadastrado, você receberá um link de recuperação. Confira também o spam.';
+    } else if (mode === 'reset') {
+      if (password !== confirmation) {
+        throw new Error('As senhas não são iguais.');
+      }
+
+      if (password.length < 6) {
+        throw new Error('A senha deve ter pelo menos 6 caracteres.');
+      }
+
+      const { error } = await supabase.auth.updateUser({
+        password: password
+      });
+
+      if (error) throw error;
+
+      message.textContent =
+        'Senha alterada com sucesso! Agora você pode entrar. 💜';
+
+      passwordInput.value = '';
+      confirmInput.value = '';
+      emailInput.disabled = false;
+      setMode('login');
+      message.textContent =
+        'Senha alterada com sucesso! Entre com sua nova senha. 💜';
     } else {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -476,13 +978,25 @@ if (mode === 'register') {
 
       if (error) throw error;
 
-     message.textContent = 'Login realizado com sucesso! Bem-vindo à Nexus! 🎮';
-     document.getElementById('nexus-auth').style.display = 'none';
+      message.textContent = 'Login realizado! Bem-vindo à Nexus! 🎮';
+
+      auth.style.display = 'none';
     }
   } catch (error) {
-    message.textContent = 'Não foi possível concluir: ' + error.message;
+    message.textContent =
+      'Não foi possível concluir: ' + error.message;
   } finally {
     submitButton.disabled = false;
+  }
+});
+
+// O link de recuperação retorna ao site e permite cadastrar uma nova senha.
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    auth.style.display = 'flex';
+    emailInput.value = '';
+    setMode('reset');
+    message.textContent = 'Link validado! Digite sua nova senha.';
   }
 });
 </script>
