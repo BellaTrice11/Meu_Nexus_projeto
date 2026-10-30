@@ -1,0 +1,332 @@
+ /* CONFIGURAÇÃO GERAL */
+  #nexus-auth,
+  #nexus-auth * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    overflow: hidden;
+  }
+
+  /* FUNDO DA TELA */
+  #nexus-auth {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px;
+
+    color: #f7f3ff;
+    font-family: Arial, sans-serif;
+
+    background-image:
+      linear-gradient(
+        rgba(8, 7, 17, 0.25),
+        rgba(8, 7, 17, 0.40)
+      ),
+      url("./src/img/nexus_background_16x9.jpe");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #080711;
+  }
+
+  /* CARTÃO DE LOGIN TRANSPARENTE */
+  #nexus-auth .nexus-card {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    padding: 28px 30px;
+
+    border: 1px solid rgba(190, 145, 255, 0.40);
+    border-radius: 24px;
+
+    background: rgba(13, 10, 25, 0.38);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    box-shadow:
+      0 0 45px rgba(112, 42, 255, 0.18),
+      inset 0 0 30px rgba(170, 120, 255, 0.08);
+
+    overflow: hidden;
+  }
+
+  /* BRILHO DO CARTÃO */
+  #nexus-auth .nexus-card::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: #853cff;
+    filter: blur(100px);
+    opacity: 0.25;
+
+    pointer-events: none;
+  }
+
+  /* LOGO */
+  #nexus-auth .nexus-logo {
+    position: relative;
+    isolation: isolate;
+
+    margin: 0;
+    padding-top: 210px;
+    min-height: 250px;
+
+    text-align: center;
+    font-size: clamp(27px, 7vw, 36px);
+    letter-spacing: 3px;
+    color: #f0e5ff;
+
+    text-shadow:
+      0 0 18px #a34dff,
+      0 0 35px #633bff;
+
+    /* AURA LILÁS ATRÁS DO N + IMAGEM */
+    background-image:
+      radial-gradient(
+        ellipse at center 42%,
+        rgba(205, 145, 255, 0.42) 0%,
+        rgba(165, 95, 255, 0.25) 30%,
+        rgba(115, 55, 255, 0.10) 55%,
+        transparent 78%
+      ),
+      url("./src/img/Nexus_Login_Logo.png");
+
+    background-repeat: no-repeat;
+    background-size:
+    300px 235px,
+    260px 215px;
+
+    background-position:
+      center top,
+      center top;
+
+    animation: nexusLogoGlow 3s ease-in-out infinite alternate;
+  }
+
+  /* ANIMAÇÃO DO NEON */
+  @keyframes nexusLogoGlow {
+    from {
+      filter:
+        drop-shadow(0 0 5px rgba(199, 4, 196, 0.711));
+    }
+
+    to {
+      filter:
+        drop-shadow(0 0 12px rgba(190, 125, 255, 0.55))
+        drop-shadow(0 0 22px rgba(162, 109, 255, 0.3));
+    }
+  }
+
+  #nexus-auth .nexus-logo::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  #nexus-auth .nexus-logo::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* SUBTÍTULO */
+  #nexus-auth .nexus-subtitle {
+    position: relative;
+    margin: 8px 0 24px;
+    text-align: center;
+    color: #e0d4f5;
+    font-size: 20px;
+  }
+
+  /* CAMPOS */
+  #nexus-auth .nexus-field {
+    margin: 0 0 18px;
+  }
+
+  #nexus-auth label {
+    display: block;
+    margin-bottom: 8px;
+    color: #f0e5ff;
+    font-size: 14px;
+  }
+
+  #nexus-auth input {
+    display: block;
+    width: 100%;
+    padding: 14px;
+
+    border: 1px solid rgba(190, 145, 255, 0.35);
+    border-radius: 10px;
+    outline: none;
+
+    background: rgba(8, 7, 17, 0.55);
+    color: #fff;
+
+    font-size: 15px;
+    transition: 0.25s;
+  }
+
+  #nexus-auth input::placeholder {
+    color: #a99bbf;
+  }
+
+  #nexus-auth input:focus {
+    border-color: #a16bff;
+    background: rgba(8, 7, 17, 0.75);
+    box-shadow: 0 0 14px #8d48ff55;
+  }
+
+  /* BOTÃO PRINCIPAL */
+  #nexus-auth .nexus-main-button {
+    width: 100%;
+    padding: 15px;
+
+    border: 0;
+    border-radius: 10px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+
+    background: linear-gradient(100deg, #853cff, #3868ff);
+    box-shadow: 0 0 25px #753aff55;
+
+    transition: 0.25s;
+  }
+
+  #nexus-auth .nexus-main-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px #753aff90;
+  }
+
+  #nexus-auth .nexus-main-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  /* BOTÕES SECUNDÁRIOS */
+  #nexus-auth .nexus-link-button {
+    display: block;
+    margin: 16px auto 0;
+    padding: 5px;
+
+    border: 0;
+    background: transparent;
+
+    color: #d7baff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  #nexus-auth .nexus-link-button:hover {
+    color: white;
+    text-shadow: 0 0 12px #a16bff;
+  }
+
+  /* MENSAGENS */
+  #nexus-auth .nexus-message {
+    min-height: 20px;
+    margin: 18px 0 0;
+
+    color: #e0d0ff;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* REMOVE AS BARRAS DE ROLAGEM */
+  html,
+  body,
+  #nexus-auth {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html,
+body {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+
+      background-size:
+        250px 195px,
+        210px 165px;
+    }
+  }
+  
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+      background-size: 210px 165px;
+    }
+  }
+  
+
+  /* CELULARES */
+  @media (max-width: 480px) {
+    #nexus-auth {
+      padding: 14px;
+    }
+
+    #nexus-auth .nexus-card {
+      padding: 22px 20px;
+    }
+
+    #nexus-auth .nexus-logo {
+      padding-top: 180px;
+      min-height: 225px;
+      background-size: 210px 165px;
+    }
+    
+  }
+  
+
+@media (max-width: 480px) {
+  #nexus-auth .nexus-card {
+    padding: 24px 20px;
+  }
+}
