@@ -53,7 +53,8 @@ body::-webkit-scrollbar,
       rgba(8, 7, 17, 0.25),
       rgba(8, 7, 17, 0.40)
     ),
-    url("./src/img/nexus_background_16x9.jpe");
+    url("../img/nexus_background_16x9.jpe");
+    
 
   background-size: cover;
   background-position: center center;
@@ -126,7 +127,7 @@ body::-webkit-scrollbar,
       rgba(115, 55, 255, 0.10) 55%,
       transparent 78%
     ),
-    url("./src/img/Nexus_Login_Logo.png");
+    url("../img/Nexus_Login_Logo.png");
 
   background-repeat: no-repeat;
 

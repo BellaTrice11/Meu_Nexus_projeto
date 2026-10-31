@@ -1,0 +1,2257 @@
+/* ==========================================================================
+   NEXUS GAMING V2 - Estilo Principal (Dark Gaming Theme)
+   ================================================================          */
+
+:root {
+  --bg-main: #0d0f18;
+  --bg-sidebar: #131622;
+  --bg-card: #181b2a;
+  --bg-card-hover: #1f2336;
+  --accent-purple: #7c3aed;
+  --accent-purple-hover: #6d28d9;
+  --accent-blue: #38bdf8;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Topbar */
+.topbar {
+  height: 64px;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.brand-name span {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  width: 320px;
+  gap: 8px;
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+.search input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  color: white;
+}
+
+/* Layout Principal (Sidebar + Main + Right-Col) */
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 24px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: var(--bg-card-hover);
+  color: var(--text-main);
+}
+
+.side-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.mini-community {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: background 0.2s;
+}
+
+.mini-community:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.mini-community small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.game-icon {
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.welcome {
+  background: linear-gradient(135deg, #1e1b4b, var(--bg-card));
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.welcome h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  background-clip: text;
+-webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.primary-btn {
+  background-color: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.primary-btn:hover {
+  background-color: var(--accent-purple-hover);
+}
+
+/* Feed e Composer */
+.feed-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.feed-head h2 {
+  font-size: 1.2rem;
+}
+
+.feed-head select {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.composer {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.composer-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.composer-top textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  resize: none;
+  outline: none;
+  height: 60px;
+  font-size: 0.95rem;
+}
+
+.composer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.attach {
+  display: flex;
+  gap: 8px;
+}
+
+.soft-btn {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.soft-btn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-card-hover);
+}
+
+/* Posts */
+#feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.post {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.post-avatar.green { background: #10b981; }
+.post-avatar.orange { background: #f97316; }
+
+.post-user {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.badge {
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--accent-purple);
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.post-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.post-menu {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.post-copy {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #cbd0e3;
+}
+
+.game-preview {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-label small {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.preview-label strong {
+  font-size: 0.9rem;
+}
+
+.preview-emoji {
+  font-size: 1.5rem;
+}
+
+.post-actions {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.action-btn:hover, .action-btn.liked {
+  color: var(--accent-blue);
+}
+
+/* Coluna Direita */
+.right-col {
+  width: 300px;
+  background-color: var(--bg-sidebar);
+  border-left: 1px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.side-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-heading {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.community-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.community-card .game-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.community-name {
+  font-weight: 600;
+}
+
+.community-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.join-btn {
+  margin-left: auto;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.join-btn.joined {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.online-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.online-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border: 1px solid var(--border-color);
+}
+
+.online-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.online-game {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.online-dot {
+  margin-left: auto;
+  color: #22c55e;
+  font-size: 0.7rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.stat {
+  background: var(--bg-sidebar);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.stat strong {
+  font-size: 1.1rem;
+  color: var(--accent-blue);
+}
+
+.stat span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Mobile Nav */
+.mobile-nav {
+  display: none;
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--border-color);
+  height: 60px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-nav button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.7rem;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.mobile-nav button.active {
+  color: var(--accent-blue);
+}
+
+.mobile-nav span {
+  font-size: 1.2rem;
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-size: 0.9rem;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Extra Views e Auth Overlays (Se necessário) */
+.extra-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.view-icon {
+  font-size: 2.5rem;
+}
+
+.view-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.view-card {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.view-card span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+/* Tela de Autenticação (Supabase) */
+#nexus-auth {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(13, 15, 24, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.nexus-card {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.nexus-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.nexus-subtitle {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.nexus-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.nexus-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.nexus-field input {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.nexus-field input:focus {
+  border-color: var(--accent-purple);
+}
+
+.nexus-main-button {
+  width: 100%;
+  background-color: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.nexus-main-button:hover {
+  background-color: var(--accent-purple-hover);
+}
+
+.nexus-link-button {
+  background: transparent;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto 0 auto;
+}
+
+.nexus-message {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 12px;
+  color: var(--accent-blue);
+}
+html,
+body{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
+
+/* =========================================
+   NEXUS GAMING V2 — HOVER ANIMADO ROXO
+   ========================================= */
+
+/* Transição suave nos elementos interativos */
+button,
+.nav-item,
+.mini-community,
+.action-btn,
+.join-btn,
+.link-btn {
+  transition:
+    background-color .18s ease,
+    color .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s cubic-bezier(.2, .8, .3, 1);
+  transform-origin: center;
+}
+
+/* Efeito ao passar o mouse nos botões */
+button:hover,
+.icon-btn:hover,
+.soft-btn:hover,
+.join-btn:hover,
+.link-btn:hover,
+.action-btn:hover {
+  color: #ffffff;
+  background-color: #702be8;
+  border-color: #a66aff;
+  box-shadow: 0 0 15px rgba(151, 75, 255, .45);
+  transform: scale(1.07);
+}
+
+/* Efeito de clique: diminui rapidamente */
+button:active,
+.nav-item:active,
+.action-btn:active {
+  transform: scale(.94);
+  transition-duration: .08s;
+}
+
+/* Menu lateral */
+.nav-item:hover,
+.nav-item.active {
+  color: #ffffff;
+  background: linear-gradient(100deg, #7132c9, #5225a8);
+  border-color: #9855e8;
+  box-shadow: 0 0 15px rgba(145, 75, 255, .35);
+  transform: scale(1.04);
+}
+
+/* Botão selecionado: fica mais gordinho */
+.nav-item.active,
+.mobile-nav button.active {
+  color: #ffffff;
+  font-weight: 700;
+  background-color: #702be8;
+  box-shadow: 0 0 18px rgba(145, 75, 255, .4);
+}
+
+/* Comunidades */
+.mini-community:hover,
+.community-card:hover {
+  color: #ffffff;
+  background-color: #35204d;
+  border-color: #9855e8;
+  transform: scale(1.03);
+}
+
+/* Botões principais */
+.primary-btn:hover,
+.nexus-main-button:hover {
+  color: #ffffff;
+  background: linear-gradient(100deg, #a34cff, #7138df);
+  box-shadow: 0 0 22px rgba(166, 92, 255, .6);
+  transform: scale(1.06);
+}
+
+/* Botões de publicações */
+.action-btn:hover,
+.action-btn.liked {
+  color: #e3caff;
+  background-color: #54258a;
+  border-color: #9855e8;
+}
+
+/* Botão de entrar em comunidades */
+.join-btn.joined {
+  background: linear-gradient(100deg, #8b3dff, #6024c9);
+  border-color: #a66aff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(151, 75, 255, .35);
+}
+
+/* Animação dos ícones */
+.icon-btn:hover .avatar,
+.brand-mark:hover {
+  transform: scale(1.08);
+}
+
+/* Remove a barra visual de rolagem,
+   mas mantém a rolagem funcionando */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Evita rolagem horizontal indesejada */
+html,
+body,
+#app {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   NEXUS GAMING V2 — BORDAS FINAS E SCROLL SUAVE
+   ========================================= */
+
+/* Bordas finas e discretas nos elementos */
+:root {
+  --border-color: rgba(166, 106, 255, 0.673);
+}
+
+/* Rolagem suave no site */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+}
+
+/* Rolagem suave nas áreas internas */
+body,
+.layout,
+.sidebar,
+.main,
+.right-col {
+  scroll-behavior: smooth;
+}
+
+/* Bordas de aproximadamente 1px */
+.topbar,
+.sidebar,
+.right-col,
+.search,
+.icon-btn,
+.welcome,
+.composer,
+.post,
+.game-preview,
+.side-card,
+.game-icon,
+.stat,
+.view-card,
+.extra-view,
+.nexus-card,
+.nexus-field input,
+.feed-head select,
+.soft-btn,
+.join-btn,
+.primary-btn,
+.nexus-main-button,
+.toast {
+  border: 0.5px solid var(--border-color);
+}
+
+/* Separadores finos */
+.topbar {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar {
+  border-right: 1px solid var(--border-color);
+}
+
+.right-col {
+  border-left: 1px solid var(--border-color);
+}
+
+.composer-bottom,
+.post-actions {
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-nav {
+  border-top: 1px solid var(--border-color);
+}
+
+/* Controles sem borda duplicada */
+.search input,
+.composer-top textarea,
+.post-menu,
+.link-btn,
+.nexus-link-button,
+.nav-item,
+.action-btn,
+.mobile-nav button,
+.avatar {
+  border: 1px solid transparent;
+}
+
+/* Destaque delicado nas bordas ao passar o mouse */
+button:hover,
+.nav-item:hover,
+.mini-community:hover,
+.community-card:hover,
+.view-card:hover {
+  border-color: rgba(151, 82, 255, 0.359);
+}
+
+/* Foco nos campos */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #9855e8;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+/* Rolagem suave também em navegadores móveis */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* ==========================================================================
+   NEXUS GAMING V2 - Estilo Principal (Dark Gaming Theme)
+   ================================================================          */
+
+:root {
+  --bg-main: #0d0f18;
+  --bg-sidebar: #131622;
+  --bg-card: #181b2a;
+  --bg-card-hover: #1f2336;
+  --accent-purple: #7c3aed;
+  --accent-purple-hover: #6d28d9;
+  --accent-blue: #38bdf8;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Topbar */
+.topbar {
+  height: 64px;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.brand-name span {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  width: 320px;
+  gap: 8px;
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+.search input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  color: white;
+}
+
+/* Layout Principal (Sidebar + Main + Right-Col) */
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 24px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: var(--bg-card-hover);
+  color: var(--text-main);
+}
+
+.side-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.mini-community {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: background 0.2s;
+}
+
+.mini-community:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.mini-community small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.game-icon {
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.welcome {
+  background: linear-gradient(135deg, #1e1b4b, var(--bg-card));
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.welcome h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  background-clip: text;
+-webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.primary-btn {
+  background-color: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.primary-btn:hover {
+  background-color: var(--accent-purple-hover);
+}
+
+/* Feed e Composer */
+.feed-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.feed-head h2 {
+  font-size: 1.2rem;
+}
+
+.feed-head select {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.composer {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.composer-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.composer-top textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  resize: none;
+  outline: none;
+  height: 60px;
+  font-size: 0.95rem;
+}
+
+.composer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.attach {
+  display: flex;
+  gap: 8px;
+}
+
+.soft-btn {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.soft-btn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-card-hover);
+}
+
+/* Posts */
+#feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.post {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.post-avatar.green { background: #10b981; }
+.post-avatar.orange { background: #f97316; }
+
+.post-user {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.badge {
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--accent-purple);
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.post-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.post-menu {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.post-copy {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #cbd0e3;
+}
+
+.game-preview {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-label small {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.preview-label strong {
+  font-size: 0.9rem;
+}
+
+.preview-emoji {
+  font-size: 1.5rem;
+}
+
+.post-actions {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.action-btn:hover, .action-btn.liked {
+  color: var(--accent-blue);
+}
+
+/* Coluna Direita */
+.right-col {
+  width: 300px;
+  background-color: var(--bg-sidebar);
+  border-left: 1px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.side-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-heading {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.community-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.community-card .game-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.community-name {
+  font-weight: 600;
+}
+
+.community-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.join-btn {
+  margin-left: auto;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.join-btn.joined {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.online-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.online-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border: 1px solid var(--border-color);
+}
+
+.online-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.online-game {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.online-dot {
+  margin-left: auto;
+  color: #22c55e;
+  font-size: 0.7rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.stat {
+  background: var(--bg-sidebar);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.stat strong {
+  font-size: 1.1rem;
+  color: var(--accent-blue);
+}
+
+.stat span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Mobile Nav */
+.mobile-nav {
+  display: none;
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--border-color);
+  height: 60px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-nav button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.7rem;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.mobile-nav button.active {
+  color: var(--accent-blue);
+}
+
+.mobile-nav span {
+  font-size: 1.2rem;
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-size: 0.9rem;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Extra Views e Auth Overlays (Se necessário) */
+.extra-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.view-icon {
+  font-size: 2.5rem;
+}
+
+.view-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.view-card {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.view-card span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+/* Tela de Autenticação (Supabase) */
+#nexus-auth {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(13, 15, 24, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.nexus-card {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.nexus-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.nexus-subtitle {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.nexus-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.nexus-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.nexus-field input {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.nexus-field input:focus {
+  border-color: var(--accent-purple);
+}
+
+.nexus-main-button {
+  width: 100%;
+  background-color: var(--accent-purple);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.nexus-main-button:hover {
+  background-color: var(--accent-purple-hover);
+}
+
+.nexus-link-button {
+  background: transparent;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto 0 auto;
+}
+
+.nexus-message {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 12px;
+  color: var(--accent-blue);
+}
+html,
+body{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
+
+/* =========================================
+   NEXUS GAMING V2 — HOVER ANIMADO ROXO
+   ========================================= */
+
+/* Transição suave nos elementos interativos */
+button,
+.nav-item,
+.mini-community,
+.action-btn,
+.join-btn,
+.link-btn {
+  transition:
+    background-color .18s ease,
+    color .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s cubic-bezier(.2, .8, .3, 1);
+  transform-origin: center;
+}
+
+/* Efeito ao passar o mouse nos botões */
+button:hover,
+.icon-btn:hover,
+.soft-btn:hover,
+.join-btn:hover,
+.link-btn:hover,
+.action-btn:hover {
+  color: #ffffff;
+  background-color: #702be8;
+  border-color: #a66aff;
+  box-shadow: 0 0 15px rgba(151, 75, 255, .45);
+  transform: scale(1.07);
+}
+
+/* Efeito de clique: diminui rapidamente */
+button:active,
+.nav-item:active,
+.action-btn:active {
+  transform: scale(.94);
+  transition-duration: .08s;
+}
+
+/* Menu lateral */
+.nav-item:hover,
+.nav-item.active {
+  color: #ffffff;
+  background: linear-gradient(100deg, #7132c9, #5225a8);
+  border-color: #9855e8;
+  box-shadow: 0 0 15px rgba(145, 75, 255, .35);
+  transform: scale(1.04);
+}
+
+/* Botão selecionado: fica mais gordinho */
+.nav-item.active,
+.mobile-nav button.active {
+  color: #ffffff;
+  font-weight: 700;
+  background-color: #702be8;
+  box-shadow: 0 0 18px rgba(145, 75, 255, .4);
+}
+
+/* Comunidades */
+.mini-community:hover,
+.community-card:hover {
+  color: #ffffff;
+  background-color: #35204d;
+  border-color: #9855e8;
+  transform: scale(1.03);
+}
+
+/* Botões principais */
+.primary-btn:hover,
+.nexus-main-button:hover {
+  color: #ffffff;
+  background: linear-gradient(100deg, #a34cff, #7138df);
+  box-shadow: 0 0 22px rgba(166, 92, 255, .6);
+  transform: scale(1.06);
+}
+
+/* Botões de publicações */
+.action-btn:hover,
+.action-btn.liked {
+  color: #e3caff;
+  background-color: #54258a;
+  border-color: #9855e8;
+}
+
+/* Botão de entrar em comunidades */
+.join-btn.joined {
+  background: linear-gradient(100deg, #8b3dff, #6024c9);
+  border-color: #a66aff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(151, 75, 255, .35);
+}
+
+/* Animação dos ícones */
+.icon-btn:hover .avatar,
+.brand-mark:hover {
+  transform: scale(1.08);
+}
+
+/* Remove a barra visual de rolagem,
+   mas mantém a rolagem funcionando */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Evita rolagem horizontal indesejada */
+html,
+body,
+#app {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   NEXUS GAMING V2 — BORDAS FINAS E SCROLL SUAVE
+   ========================================= */
+
+/* Bordas finas e discretas nos elementos */
+:root {
+  --border-color: rgba(166, 106, 255, 0.673);
+}
+
+/* Rolagem suave no site */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+}
+
+/* Rolagem suave nas áreas internas */
+body,
+.layout,
+.sidebar,
+.main,
+.right-col {
+  scroll-behavior: smooth;
+}
+
+/* Bordas de aproximadamente 1px */
+.topbar,
+.sidebar,
+.right-col,
+.search,
+.icon-btn,
+.welcome,
+.composer,
+.post,
+.game-preview,
+.side-card,
+.game-icon,
+.stat,
+.view-card,
+.extra-view,
+.nexus-card,
+.nexus-field input,
+.feed-head select,
+.soft-btn,
+.join-btn,
+.primary-btn,
+.nexus-main-button,
+.toast {
+  border: 0.5px solid var(--border-color);
+}
+
+/* Separadores finos */
+.topbar {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar {
+  border-right: 1px solid var(--border-color);
+}
+
+.right-col {
+  border-left: 1px solid var(--border-color);
+}
+
+.composer-bottom,
+.post-actions {
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-nav {
+  border-top: 1px solid var(--border-color);
+}
+
+/* Controles sem borda duplicada */
+.search input,
+.composer-top textarea,
+.post-menu,
+.link-btn,
+.nexus-link-button,
+.nav-item,
+.action-btn,
+.mobile-nav button,
+.avatar {
+  border: 1px solid transparent;
+}
+
+/* Destaque delicado nas bordas ao passar o mouse */
+button:hover,
+.nav-item:hover,
+.mini-community:hover,
+.community-card:hover,
+.view-card:hover {
+  border-color: rgba(151, 82, 255, 0.359);
+}
+
+/* Foco nos campos */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #9855e8;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+/* Rolagem suave também em navegadores móveis */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+
+
+
+/* =========================================
+   NEXUS GAMING V2 — FUNDO E VIDRO FUMÊ
+   GLASSMORPHISM
+   ========================================= */
+
+/* IMAGEM DE FUNDO DO DASHBOARD */
+html,
+body {
+  min-height: 100%;
+  background-color: #0d0f18;
+}
+
+body {
+  background-image:
+    linear-gradient(
+      rgba(8, 10, 20, 0.35),
+      rgba(8, 10, 20, 0.50)
+    ),
+    url("../img/nexus_background_16x9.jpe");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #0d0f18;
+}
+
+/* GARANTE QUE O FUNDO APAREÇA ATRÁS DO DASHBOARD */
+#app,
+.layout,
+.main {
+  background: transparent !important;
+}
+
+/* BARRAS E PAINÉIS PRINCIPAIS */
+.topbar,
+.sidebar,
+.right-col,
+.mobile-nav {
+  background: rgba(15, 18, 32, 0.58) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(166, 106, 255, 0.35);
+}
+
+/* JANELAS E CARTÕES */
+.welcome,
+.composer,
+.post,
+.side-card,
+.extra-view,
+.view-card,
+.game-preview,
+.stat {
+  background: rgba(24, 27, 42, 0.55) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(183, 140, 255, 0.30);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* DESTAQUE DA JANELA DE BOAS-VINDAS */
+.welcome {
+  background: linear-gradient(
+    135deg,
+    rgba(49, 29, 91, 0.65),
+    rgba(24, 27, 42, 0.50)
+  ) !important;
+}
+
+/* PESQUISA E SELETORES */
+.search,
+.feed-head select {
+  background: rgba(18, 21, 36, 0.55) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* BOTÕES SECUNDÁRIOS */
+.icon-btn,
+.soft-btn,
+.join-btn {
+  background-color: rgba(31, 35, 54, 0.65);
+}
+
+/* ÍCONES E AVATARES DE JOGO */
+.game-icon,
+.online-avatar {
+  background-color: rgba(19, 22, 34, 0.60);
+}
+
+/* MENU LATERAL */
+.nav-item {
+  background-color: transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: rgba(112, 43, 232, 0.35);
+}
+
+/* COMUNIDADES */
+.mini-community:hover,
+.community-card:hover {
+  background-color: rgba(112, 43, 232, 0.22);
+}
+
+/* CAMPOS DE TEXTO */
+.composer-top textarea {
+  background: transparent;
+}
+
+/* NOTIFICAÇÕES */
+.toast {
+  background: rgba(24, 27, 42, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* BRILHO NAS BORDAS */
+.welcome:hover,
+.composer:hover,
+.post:hover,
+.side-card:hover,
+.view-card:hover {
+  border-color: rgba(166, 106, 255, 0.55);
+}
+
+/* LEITURA DOS TEXTOS */
+.post-copy,
+.welcome p {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
