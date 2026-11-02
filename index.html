@@ -240,7 +240,12 @@ const viewInfo = {
   'Comunidades': {icon:'🌐', title:'Explorar comunidades', text:'Encontre sua galera e participe das conversas sobre seus jogos favoritos.', cards:[['⛏️ Minecraft Brasil','12,4 mil membros · Construção e survival.','Entrar'],['🗡️ Guerreiros de Hyrule','8,2 mil membros · Zelda e aventura.','Entrar'],['🚗 GTA V Brasil','21,8 mil membros · Corridas e missões.','Entrar']]},
   'Mensagens': {icon:'✉', title:'Mensagens', text:'Sua central de conversas com outros jogadores. As mensagens entre usuários serão ativadas quando o aplicativo tiver contas e um servidor.', cards:[['Luna.exe','Última atividade: jogando Valorant.','Abrir conversa'],['RafaCraft','Última atividade: jogando Minecraft.','Abrir conversa']]},
   'Conquistas': {icon:'🏆', title:'Minhas conquistas', text:'Acompanhe seu progresso e celebre suas vitórias gamer.', cards:[['Primeiro passo','Você começou sua jornada no NEXUS.','Conquista inicial'],['Criador de conteúdo','Publique sua primeira mensagem.','Continue jogando'],['Espírito de equipe','Entre em uma comunidade gamer.','Jogue junto']]},
-  'Perfil': {icon:'👤', title:'Meu perfil gamer', text:'Este é o espaço do seu perfil. Personalização e contas online serão adicionadas em uma próxima etapa.', cards:[['Nome de jogador','JG · Perfil local neste dispositivo.','Editar em breve'],['Publicações','Suas publicações ficam salvas neste dispositivo.','Ver publicações'],['Comunidades','Entre em comunidades para montar sua lista.','Explorar']] }
+  'Perfil': {
+  icon: '👤',
+  title: 'Meu perfil gamer',
+  text: 'Personalize sua identidade gamer e mostre sua presença na comunidade.',
+  cards: []
+}
 };
 function showView(view) {
   const main = document.getElementById('mainContent');
@@ -259,11 +264,71 @@ function showView(view) {
     document.getElementById('searchInput').value = '';
     window.scrollTo({top:0,behavior:'smooth'});
     return;
-  }
+      }
   welcome.hidden = true; feedHead.hidden = true; composer.hidden = true; feed.hidden = true;
   if (right) right.hidden = true;
   const info = viewInfo[view];
   if (!info) return;
+  if (view === 'Perfil') {
+  const page = document.createElement('section');
+  page.className = 'extra-view nexus-profile';
+
+  page.innerHTML = `
+    <div class="profile-header">
+      <div class="profile-avatar-area">
+        <img id="profile-photo"
+             src="./src/img/Nexus_Login_Logo.png"
+             alt="Foto do jogador">
+
+        <label for="profile-photo-input">
+          📷 Trocar foto
+        </label>
+
+        <input id="profile-photo-input"
+               type="file"
+               accept="image/*"
+               hidden>
+      </div>
+
+      <div class="profile-details">
+        <h2 id="profile-gamer-name">Meu perfil</h2>
+        <p id="profile-email"></p>
+        <p id="profile-status">● Carregando status...</p>
+      </div>
+    </div>
+
+    <div class="profile-settings">
+      <label for="profile-name-input">Nome gamer</label>
+      <input id="profile-name-input"
+             maxlength="20"
+             placeholder="Seu nome gamer">
+
+      <label for="profile-status-select">Meu status</label>
+      <select id="profile-status-select">
+        <option value="online">🟢 Online</option>
+        <option value="away">🌙 Ausente</option>
+        <option value="offline">⚫ Offline</option>
+      </select>
+
+      <button id="profile-save-button" class="primary-btn">
+        Salvar alterações
+      </button>
+
+      <p id="profile-message"></p>
+    </div>
+  `;
+
+  main.appendChild(page);
+
+  window.dispatchEvent(
+    new CustomEvent('nexus:open-profile', {
+      detail: { page }
+    })
+  );
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  return;
+}
   const page = document.createElement('section');
   page.className = 'extra-view';
   const icon = document.createElement('div'); icon.className = 'view-icon'; icon.textContent = info.icon;
@@ -479,7 +544,38 @@ const message = document.getElementById('nexus-auth-message');
 const subtitle = document.getElementById('nexus-auth-subtitle');
 
 const siteUrl = 'https://bellatrice11.github.io/Meu_Nexus_projeto/';
+let nexusCurrentUser = null;
 
+async function loadNexusProfile() {
+  const { data: { user }, error: userError } =
+    await supabase.auth.getUser();
+
+  if (userError) throw userError;
+
+  if (!user) return;
+
+  nexusCurrentUser = user;
+
+  const username =
+    user.user_metadata?.username ||
+    user.email?.split('@')[0] ||
+    'Gamer';
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .upsert({
+      id: user.id,
+      username: username,
+      status: 'online',
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
 let mode = 'login';
 
 // Guarda o e-mail usado para solicitar a recuperação.
@@ -657,7 +753,14 @@ form.addEventListener('submit', async (event) => {
       if (error) throw error;
 
       message.textContent = 'Login realizado! Bem-vindo à Nexus! 🎮';
-      auth.style.display = 'none';
+auth.style.display = 'none';
+
+try {
+  await loadNexusProfile();
+  console.log('Perfil carregado com sucesso!');
+} catch (error) {
+  console.error('Erro ao carregar perfil:', error);
+}
     }
 
   } catch (error) {
