@@ -685,11 +685,11 @@ window.addEventListener('nexus:open-profile', async (event) => {
           `${nexusCurrentUser.id}/${Date.now()}.${extension}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(filePath, file, {
-            upsert: true,
-            contentType: file.type
-          });
+  .from('avatars')
+  .upload(filePath, file, {
+    upsert: false,
+    contentType: file.type
+  });
 
         if (uploadError) throw uploadError;
 
