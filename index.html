@@ -254,21 +254,39 @@ function showView(view) {
   const composer = document.getElementById('composer');
   const feed = document.getElementById('feed');
   const right = document.getElementById('rightCol');
-  document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+
+  document.querySelectorAll('[data-view]').forEach(button =>
+    button.classList.toggle('active', button.dataset.view === view)
+  );
+
   document.querySelectorAll('.extra-view').forEach(node => node.remove());
+
   if (view === 'Início') {
-    welcome.hidden = false; feedHead.hidden = false; composer.hidden = false; feed.hidden = false;
+    welcome.hidden = false;
+    feedHead.hidden = false;
+    composer.hidden = false;
+    feed.hidden = false;
+
     if (right) right.hidden = false;
+
     document.getElementById('feedTitle').textContent = 'Feed da comunidade';
     document.querySelectorAll('#feed .post').forEach(post => post.style.display = '');
     document.getElementById('searchInput').value = '';
-    window.scrollTo({top:0,behavior:'smooth'});
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
-      }
-  welcome.hidden = true; feedHead.hidden = true; composer.hidden = true; feed.hidden = true;
+  }
+
+  welcome.hidden = true;
+  feedHead.hidden = true;
+  composer.hidden = true;
+  feed.hidden = true;
+
   if (right) right.hidden = true;
+
   const info = viewInfo[view];
   if (!info) return;
+
   if (view === 'Perfil') {
   const page = document.createElement('section');
   page.className = 'extra-view nexus-profile';
@@ -277,7 +295,7 @@ function showView(view) {
     <div class="profile-header">
       <div class="profile-avatar-area">
         <img id="profile-photo"
-             src="./src/img/Nexus_Login_Logo.png"
+           src="/Meu_Nexus_projeto/img/Nexus_Login_Logo.png"
              alt="Foto do jogador">
 
         <label for="profile-photo-input">
@@ -318,7 +336,19 @@ function showView(view) {
     </div>
   `;
 
-  main.appendChild(page);
+ main.appendChild(page);
+
+page.style.display = 'block';
+page.style.visibility = 'visible';
+page.style.opacity = '1';
+page.style.position = 'relative';
+page.style.zIndex = '9999';
+
+page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+console.log('PERFIL FOI INSERIDO:', page);
+console.log('ELEMENTO MAIN:', main);
+console.log('DIMENSÕES:', page.getBoundingClientRect());
 
   window.dispatchEvent(
     new CustomEvent('nexus:open-profile', {
@@ -365,6 +395,7 @@ function showView(view) {
   });
   page.append(icon, title, description, cards);
   main.appendChild(page);
+  
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
@@ -546,15 +577,25 @@ const subtitle = document.getElementById('nexus-auth-subtitle');
 const siteUrl = 'https://bellatrice11.github.io/Meu_Nexus_projeto/';
 let nexusCurrentUser = null;
 
+
 async function loadNexusProfile() {
   const { data: { user }, error: userError } =
     await supabase.auth.getUser();
 
   if (userError) throw userError;
-
-  if (!user) return;
+  if (!user) return null;
 
   nexusCurrentUser = user;
+
+  const { data: existing, error: readError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (readError) throw readError;
+
+  if (existing) return existing;
 
   const username =
     user.user_metadata?.username ||
@@ -563,12 +604,11 @@ async function loadNexusProfile() {
 
   const { data, error } = await supabase
     .from('profiles')
-    .upsert({
+    .insert({
       id: user.id,
-      username: username,
-      status: 'online',
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'id' })
+      username,
+      status: 'online'
+    })
     .select()
     .single();
 
@@ -576,7 +616,148 @@ async function loadNexusProfile() {
 
   return data;
 }
+
 let mode = 'login';
+
+window.addEventListener('nexus:open-profile', async (event) => {
+  const page = event.detail.page;
+
+  const photo = page.querySelector('#profile-photo');
+  const photoInput = page.querySelector('#profile-photo-input');
+  const nameInput = page.querySelector('#profile-name-input');
+  const statusSelect = page.querySelector('#profile-status-select');
+  const gamerName = page.querySelector('#profile-gamer-name');
+  const emailText = page.querySelector('#profile-email');
+  const statusText = page.querySelector('#profile-status');
+  const saveButton = page.querySelector('#profile-save-button');
+  const message = page.querySelector('#profile-message');
+
+  try {
+    const profile = await loadNexusProfile();
+
+    if (!profile) throw new Error('Usuário não encontrado.');
+
+    nameInput.value = profile.username || '';
+    gamerName.textContent = profile.username || 'Gamer';
+    emailText.textContent = nexusCurrentUser.email || '';
+    statusSelect.value = profile.status || 'online';
+
+    if (profile.avatar_url) {
+      photo.src = profile.avatar_url;
+    }
+
+    const updateStatusText = () => {
+      const labels = {
+        online: '🟢 Online',
+        away: '🌙 Ausente',
+        offline: '⚫ Offline'
+      };
+
+      statusText.textContent =
+        '● ' + labels[statusSelect.value];
+    };
+
+    updateStatusText();
+
+    statusSelect.addEventListener('change', updateStatusText);
+
+    photoInput.addEventListener('change', async () => {
+      const file = photoInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        message.textContent = 'Escolha um arquivo de imagem.';
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        message.textContent = 'A imagem deve ter no máximo 5 MB.';
+        return;
+      }
+
+      const previousPhoto = photo.src;
+      photo.src = URL.createObjectURL(file);
+      message.textContent = 'Enviando sua foto...';
+
+      try {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const filePath =
+          `${nexusCurrentUser.id}/${Date.now()}.${extension}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file, {
+            upsert: true,
+            contentType: file.type
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicData } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+
+        const avatarUrl = publicData.publicUrl;
+
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            avatar_url: avatarUrl,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', nexusCurrentUser.id);
+
+        if (updateError) throw updateError;
+
+        photo.src = avatarUrl;
+        message.textContent = 'Foto atualizada com sucesso! 💜';
+
+      } catch (error) {
+        photo.src = previousPhoto;
+        message.textContent = 'Erro ao enviar foto: ' + error.message;
+      }
+    });
+
+    saveButton.addEventListener('click', async () => {
+      const username = nameInput.value.trim();
+
+      if (!username) {
+        message.textContent = 'Digite seu nome gamer.';
+        return;
+      }
+
+      saveButton.disabled = true;
+      message.textContent = 'Salvando alterações...';
+
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            username,
+            status: statusSelect.value,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', nexusCurrentUser.id);
+
+        if (error) throw error;
+
+        gamerName.textContent = username;
+        updateStatusText();
+        message.textContent = 'Perfil atualizado com sucesso! 🎮';
+
+      } catch (error) {
+        message.textContent = 'Erro ao salvar: ' + error.message;
+      } finally {
+        saveButton.disabled = false;
+      }
+    });
+
+  } catch (error) {
+    message.textContent = 'Erro ao carregar perfil: ' + error.message;
+    console.error(error);
+  }
+});
+
 
 // Guarda o e-mail usado para solicitar a recuperação.
 let recoveryEmail = '';
