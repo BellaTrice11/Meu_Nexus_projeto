@@ -685,7 +685,7 @@ window.addEventListener('nexus:open-profile', async (event) => {
           `${nexusCurrentUser.id}/${Date.now()}.${extension}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('avatars')
+          .from('avatars.')
           .upload(filePath, file, {
             upsert: true,
             contentType: file.type
@@ -694,10 +694,11 @@ window.addEventListener('nexus:open-profile', async (event) => {
         if (uploadError) throw uploadError;
 
         const { data: publicData } = supabase.storage
-          .from('avatars')
+          .from('avatars.')
           .getPublicUrl(filePath);
 
         const avatarUrl = publicData.publicUrl;
+        console.log('URL PÚBLICA DA FOTO:', avatarUrl);
 
         const { error: updateError } = await supabase
           .from('profiles')
