@@ -2255,3 +2255,279 @@ body {
 .welcome p {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
+
+/* ==================================
+   NEXUS GAMING - PERFIL PERSONALIZADO
+================================== */
+
+.nexus-profile-card {
+  --profile-glow: #9b6cff;
+  position: relative;
+  width: 100%;
+  padding: 5px;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    #8b5cf6,
+    #2563eb,
+    #c084fc,
+    #8b5cf6
+  );
+  box-shadow:
+    0 0 15px rgba(139, 92, 246, .35),
+    0 0 35px rgba(37, 99, 235, .20);
+  overflow: hidden;
+  animation: nexus-profile-glow 5s ease-in-out infinite alternate;
+}
+
+@keyframes nexus-profile-glow {
+  from {
+    box-shadow: 0 0 12px var(--profile-glow);
+  }
+  to {
+    box-shadow: 0 0 30px var(--profile-glow),
+                0 0 50px rgba(80, 100, 255, .25);
+  }
+}
+
+.profile-cover {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  background:
+    radial-gradient(circle at 30% 30%, #7546bd, transparent 40%),
+    linear-gradient(120deg, #100b29, #182b57, #32134c);
+}
+
+.profile-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cover-change {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  color: white;
+  background: rgba(15, 12, 35, .75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.25);
+  cursor: pointer;
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 25px;
+  background: rgba(20, 17, 43, .92);
+  backdrop-filter: blur(15px);
+}
+
+.profile-avatar-area {
+  position: relative;
+  flex-shrink: 0;
+  text-align: center;
+  margin-top: -75px;
+}
+
+.profile-avatar-area img {
+  width: 115px;
+  height: 115px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--profile-glow);
+  box-shadow: 0 0 20px var(--profile-glow);
+  background: #211638;
+}
+
+.profile-avatar-area label {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.profile-details h2 {
+  font-size: clamp(25px, 4vw, 38px);
+  font-weight: 800;
+  color: white;
+  letter-spacing: 2px;
+  margin: 0 0 8px;
+  text-shadow: 0 0 15px var(--profile-glow);
+}
+
+#profile-status {
+  color: #c4b5fd;
+  margin: 0;
+}
+
+.profile-customization {
+  padding: 25px;
+  background: rgba(16, 13, 35, .94);
+  color: white;
+  border-radius: 0 0 20px 20px;
+}
+
+.profile-customization h3 {
+  margin-top: 0;
+  color: #c4a5ff;
+  font-size: 20px;
+}
+
+.profile-customization label {
+  display: block;
+  margin: 17px 0 7px;
+}
+
+.profile-customization input,
+.profile-customization select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(180,150,255,.3);
+}
+
+.profile-customization button {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .profile-cover {
+    height: 170px;
+  }
+
+  .profile-identity {
+    gap: 14px;
+    padding: 18px 14px;
+  }
+
+  .profile-avatar-area img {
+    width: 85px;
+    height: 85px;
+  }
+
+  .profile-avatar-area {
+    margin-top: -55px;
+  }
+
+  .profile-customization {
+    padding: 18px;
+  }
+}
+
+/* TEMAS DO PERFIL NEXUS */
+
+.nexus-profile-card[data-theme="galaxy"] .profile-cover {
+  background:
+    radial-gradient(circle at 20% 30%, #a855f7 0, transparent 35%),
+    radial-gradient(circle at 80% 70%, #2563eb 0, transparent 40%),
+    linear-gradient(135deg, #09051f, #25105b, #080d2c);
+}
+
+.nexus-profile-card[data-theme="technology"] .profile-cover {
+  background:
+    radial-gradient(circle at 20% 30%, #00e5ff 0, transparent 35%),
+    radial-gradient(circle at 80% 70%, #2563eb 0, transparent 40%),
+    linear-gradient(135deg, #020d18, #063b55, #101044);
+}
+
+.nexus-profile-card[data-theme="custom"] .profile-cover {
+  background: #171329;
+}
+
+.nexus-profile-card[data-theme="galaxy"] {
+  --profile-glow: #a855f7;
+}
+
+.nexus-profile-card[data-theme="technology"] {
+  --profile-glow: #00d9ff;
+}
+/* Cartão de perfil na página inicial */
+.home-profile-card {
+  width: 100%;
+  margin: 25px 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #111329;
+  border: 1px solid rgba(155, 108, 255, 0.45);
+  box-shadow: 0 0 22px rgba(155, 108, 255, 0.18);
+}
+
+.home-profile-cover {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: linear-gradient(120deg, #211447, #092d49);
+}
+
+.home-profile-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  flex-wrap: wrap;
+}
+
+.home-profile-info > img {
+  width: 90px;
+  height: 90px;
+  min-width: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #a855f7;
+  background: #211447;
+}
+
+.home-profile-details {
+  flex: 1;
+  min-width: 120px;
+}
+
+.home-profile-details h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+  color: white;
+}
+
+.home-profile-details span {
+  color: #c4b5fd;
+}
+
+@media (max-width: 600px) {
+  .home-profile-cover {
+    height: 130px;
+  }
+
+  .home-profile-info > img {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+  }
+}
+#homeProfilePhoto {
+  width: 90px !important;
+  height: 90px !important;
+  min-width: 90px !important;
+  max-width: 90px !important;
+  max-height: 90px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+

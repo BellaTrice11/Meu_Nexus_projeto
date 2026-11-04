@@ -42,7 +42,25 @@
       <p>Encontre jogadores, compartilhe suas conquistas e faça parte de comunidades que vivem os mesmos jogos que você.</p>
       <button class="primary-btn" id="createPostBtn">＋ Criar publicação</button>
     </section>
-    <div class="feed-head" id="feedHead"><h2 id="feedTitle">Feed da comunidade</h2><select id="feedSort" aria-label="Ordenar feed"><option value="recent">Mais recentes</option><option value="popular">Mais populares</option></select></div>
+
+<section class="home-profile-card" id="homeProfileCard">
+  <div class="home-profile-cover">
+    <img id="homeProfileCover" src="" alt="Capa do perfil">
+  </div>
+
+  <div class="home-profile-info">
+    <img id="homeProfilePhoto" src="" alt="Foto de perfil">
+    <div class="home-profile-details">
+      <h2 id="homeProfileName">TRICE</h2>
+      <span id="homeProfileStatus">● Online</span>
+    </div>
+    <button class="soft-btn" onclick="showView('Perfil')">
+      Ver perfil
+    </button>
+  </div>
+</section>
+
+<div class="feed-head" id="feedHead"><h2 id="feedTitle">Feed da comunidade</h2><select id="feedSort" aria-label="Ordenar feed"><option value="recent">Mais recentes</option><option value="popular">Mais populares</option></select></div>
     <section class="composer" id="composer">
       <div class="composer-top"><div class="avatar">JG</div><textarea id="composerText" maxlength="500" placeholder="E aí, jogador... qual é a boa de hoje?"></textarea></div>
       <div class="composer-bottom"><div class="attach"><button class="soft-btn" onclick="notify('O envio de imagens será adicionado na próxima etapa.')">▧ Foto</button><button class="soft-btn" onclick="notify('A marcação de jogos será adicionada em breve.')">🎮 Marcar jogo</button></div><button class="primary-btn" id="publishBtn">Publicar ↗</button></div>
@@ -291,37 +309,68 @@ function showView(view) {
   const page = document.createElement('section');
   page.className = 'extra-view nexus-profile';
 
-  page.innerHTML = `
-    <div class="profile-header">
-      <div class="profile-avatar-area">
-        <img id="profile-photo"
-           src="/Meu_Nexus_projeto/img/Nexus_Login_Logo.png"
-             alt="Foto do jogador">
+  
+page.innerHTML = `
+  <div class="nexus-profile-card">
 
-        <label for="profile-photo-input">
-          📷 Trocar foto
-        </label>
+    <div class="profile-cover" id="profile-cover">
+      <img id="profile-cover-image" src="" alt="Capa do perfil">
 
-        <input id="profile-photo-input"
-               type="file"
-               accept="image/*"
-               hidden>
-      </div>
+     
+
+      <input id="profile-cover-input"
+             type="file"
+             accept="image/*"
+             hidden>
+    </div>
+
+    <div class="profile-identity">
+     
+<div class="profile-avatar-area">
+
+  <button id="profile-edit-button" type="button">
+    ✨ Editar perfil
+  </button>
+
+  <img id="profile-photo"
+       src="/Meu_Nexus_projeto/img/Nexus_Login_Logo.png"
+       alt="Foto do jogador"
+       hidden>
+
+  <label for="profile-photo-input">
+    📷 Trocar foto
+  </label>
+
+  <input id="profile-photo-input"
+         type="file"
+         accept="image/*"
+         hidden>
+</div>
+
 
       <div class="profile-details">
-        <h2 id="profile-gamer-name">Meu perfil</h2>
-        <p id="profile-email"></p>
+        <h2 id="profile-gamer-name">TRICE</h2>
         <p id="profile-status">● Carregando status...</p>
       </div>
     </div>
 
-    <div class="profile-settings">
+    <div class="profile-customization">
+      <h3>Personalize seu universo</h3>
+
+      <label for="profile-theme-select">Estilo do perfil</label>
+
+      <select id="profile-theme-select">
+        <option value="galaxy">🌌 Galáxia</option>
+        <option value="technology">🎮 Tecnologia</option>
+        <option value="custom">🖼️ Minha capa personalizada</option>
+      </select>
+
       <label for="profile-name-input">Nome gamer</label>
       <input id="profile-name-input"
              maxlength="20"
              placeholder="Seu nome gamer">
 
-      <label for="profile-status-select">Meu status</label>
+      <label for="profile-status-select">Minha presença</label>
       <select id="profile-status-select">
         <option value="online">🟢 Online</option>
         <option value="away">🌙 Ausente</option>
@@ -329,12 +378,14 @@ function showView(view) {
       </select>
 
       <button id="profile-save-button" class="primary-btn">
-        Salvar alterações
+        Salvar personalização
       </button>
 
       <p id="profile-message"></p>
     </div>
-  `;
+
+  </div>
+`;
 
  main.appendChild(page);
 
@@ -617,17 +668,71 @@ async function loadNexusProfile() {
   return data;
 }
 
+async function updateHomeProfile() {
+  try {
+    const profile = await loadNexusProfile();
+    if (!profile) return;
+
+    const card = document.getElementById('homeProfileCard');
+    const cover = document.getElementById('homeProfileCover');
+    const photo = document.getElementById('homeProfilePhoto');
+    const name = document.getElementById('homeProfileName');
+    const status = document.getElementById('homeProfileStatus');
+
+    if (!card || !cover || !photo || !name || !status) return;
+
+    name.textContent = profile.username || 'Gamer';
+
+    const statuses = {
+      online: '🟢 Online',
+      away: '🌙 Ausente',
+      offline: '⚫ Offline'
+    };
+
+    status.textContent = statuses[profile.status] || '🟢 Online';
+
+    if (profile.avatar_url) {
+      photo.src = profile.avatar_url;
+      photo.hidden = false;
+    } else {
+      photo.removeAttribute('src');
+      photo.hidden = true;
+    }
+
+    if (profile.cover_url && profile.profile_theme === 'custom') {
+      cover.src = profile.cover_url;
+      cover.style.display = 'block';
+    } else {
+      cover.removeAttribute('src');
+      cover.style.display = 'none';
+    }
+
+    card.dataset.theme = profile.profile_theme || 'galaxy';
+
+  } catch (error) {
+    console.error('Erro ao atualizar cartão do perfil:', error);
+  }
+}
 let mode = 'login';
+
 
 window.addEventListener('nexus:open-profile', async (event) => {
   const page = event.detail.page;
 
   const photo = page.querySelector('#profile-photo');
   const photoInput = page.querySelector('#profile-photo-input');
+  const editButton = page.querySelector('#profile-edit-button');
+  const cover = page.querySelector('#profile-cover-image');
+  const coverInput = page.querySelector('#profile-cover-input');
+  const coverArea = page.querySelector('#profile-cover');
+  const profileCard = page.querySelector('.nexus-profile-card');
+  const customization = page.querySelector('.profile-customization');
+
   const nameInput = page.querySelector('#profile-name-input');
   const statusSelect = page.querySelector('#profile-status-select');
+  const themeSelect = page.querySelector('#profile-theme-select');
+
   const gamerName = page.querySelector('#profile-gamer-name');
-  const emailText = page.querySelector('#profile-email');
   const statusText = page.querySelector('#profile-status');
   const saveButton = page.querySelector('#profile-save-button');
   const message = page.querySelector('#profile-message');
@@ -636,30 +741,144 @@ window.addEventListener('nexus:open-profile', async (event) => {
     const profile = await loadNexusProfile();
 
     if (!profile) throw new Error('Usuário não encontrado.');
+    
+const photoLabel = page.querySelector(
+  'label[for="profile-photo-input"]'
+);
+
+// Esconde as opções de edição ao abrir o perfil.
+customization.hidden = true;
+photoLabel.hidden = true;
+
+// Mostra a foto somente se o jogador já tiver enviado uma.
+photo.hidden = !profile.avatar_url;
+editButton.hidden = !!profile.avatar_url;
+
+// Abre a edição pelo botão ou pela foto.
+function openProfileEditor() {
+  customization.hidden = false;
+  photoLabel.hidden = false;
+}
+
+editButton.addEventListener('click', openProfileEditor);
+photo.addEventListener('click', openProfileEditor);
+photo.style.cursor = 'pointer';
+
 
     nameInput.value = profile.username || '';
     gamerName.textContent = profile.username || 'Gamer';
-    emailText.textContent = nexusCurrentUser.email || '';
     statusSelect.value = profile.status || 'online';
+    themeSelect.value = profile.profile_theme || 'galaxy';
 
     if (profile.avatar_url) {
       photo.src = profile.avatar_url;
     }
 
-    const updateStatusText = () => {
+    if (profile.cover_url) {
+      cover.src = profile.cover_url;
+    }
+
+    function updateTheme() {
+      const theme = themeSelect.value;
+
+      profileCard.dataset.theme = theme;
+
+      const colors = {
+        galaxy: '#9b6cff',
+        technology: '#00d9ff',
+        custom: '#c084fc'
+      };
+
+      profileCard.style.setProperty(
+        '--profile-glow',
+        colors[theme] || colors.galaxy
+      );
+
+      cover.style.display =
+        theme === 'custom' && profile.cover_url
+          ? 'block'
+          : 'none';
+    }
+
+    function updateStatusText() {
       const labels = {
         online: '🟢 Online',
         away: '🌙 Ausente',
         offline: '⚫ Offline'
       };
 
-      statusText.textContent =
-        '● ' + labels[statusSelect.value];
-    };
+      statusText.textContent = labels[statusSelect.value];
+    }
 
+    updateTheme();
     updateStatusText();
 
+    themeSelect.addEventListener('change', updateTheme);
+    themeSelect.addEventListener('change', () => {
+  if (themeSelect.value === 'custom') {
+    coverInput.click();
+  }
+});
     statusSelect.addEventListener('change', updateStatusText);
+
+    coverInput.addEventListener('change', async () => {
+      const file = coverInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        message.textContent = 'Escolha um arquivo de imagem.';
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        message.textContent = 'A capa deve ter no máximo 5 MB.';
+        return;
+      }
+
+      message.textContent = 'Enviando sua capa...';
+
+      try {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const filePath =
+          `${nexusCurrentUser.id}/cover-${Date.now()}.${extension}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file, {
+            upsert: false,
+            contentType: file.type
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicData } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+
+        const coverUrl = publicData.publicUrl;
+
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            cover_url: coverUrl,
+            profile_theme: 'custom',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', nexusCurrentUser.id);
+
+        if (updateError) throw updateError;
+
+        profile.cover_url = coverUrl;
+        cover.src = coverUrl;
+        themeSelect.value = 'custom';
+        updateTheme();
+
+        message.textContent = 'Sua capa foi salva! 💜';
+
+      } catch (error) {
+        message.textContent = 'Erro ao enviar capa: ' + error.message;
+      }
+    });
 
     photoInput.addEventListener('change', async () => {
       const file = photoInput.files[0];
@@ -685,11 +904,11 @@ window.addEventListener('nexus:open-profile', async (event) => {
           `${nexusCurrentUser.id}/${Date.now()}.${extension}`;
 
         const { error: uploadError } = await supabase.storage
-  .from('avatars')
-  .upload(filePath, file, {
-    upsert: false,
-    contentType: file.type
-  });
+          .from('avatars')
+          .upload(filePath, file, {
+            upsert: false,
+            contentType: file.type
+          });
 
         if (uploadError) throw uploadError;
 
@@ -698,7 +917,6 @@ window.addEventListener('nexus:open-profile', async (event) => {
           .getPublicUrl(filePath);
 
         const avatarUrl = publicData.publicUrl;
-        console.log('URL PÚBLICA DA FOTO:', avatarUrl);
 
         const { error: updateError } = await supabase
           .from('profiles')
@@ -711,6 +929,8 @@ window.addEventListener('nexus:open-profile', async (event) => {
         if (updateError) throw updateError;
 
         photo.src = avatarUrl;
+        photo.hidden = false;
+        editButton.hidden = true;
         message.textContent = 'Foto atualizada com sucesso! 💜';
 
       } catch (error) {
@@ -736,6 +956,7 @@ window.addEventListener('nexus:open-profile', async (event) => {
           .update({
             username,
             status: statusSelect.value,
+            profile_theme: themeSelect.value,
             updated_at: new Date().toISOString()
           })
           .eq('id', nexusCurrentUser.id);
@@ -744,7 +965,12 @@ window.addEventListener('nexus:open-profile', async (event) => {
 
         gamerName.textContent = username;
         updateStatusText();
+        updateTheme();
+
         message.textContent = 'Perfil atualizado com sucesso! 🎮';
+        setTimeout(() => {
+          showView('Início');
+        }, 900);
 
       } catch (error) {
         message.textContent = 'Erro ao salvar: ' + error.message;
@@ -758,6 +984,7 @@ window.addEventListener('nexus:open-profile', async (event) => {
     console.error(error);
   }
 });
+
 
 
 // Guarda o e-mail usado para solicitar a recuperação.
@@ -938,8 +1165,8 @@ form.addEventListener('submit', async (event) => {
 auth.style.display = 'none';
 
 try {
-  await loadNexusProfile();
-  console.log('Perfil carregado com sucesso!');
+  await updateHomeProfile();
+  console.log('Perfil e cartão inicial atualizados!');
 } catch (error) {
   console.error('Erro ao carregar perfil:', error);
 }
