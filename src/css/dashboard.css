@@ -2531,3 +2531,9 @@ body {
   flex-shrink: 0;
 }
 
+/* Respeita os elementos que o sistema precisa esconder */
+#homeProfileCard[hidden],
+.profile-customization[hidden],
+.profile-avatar-area label[hidden] {
+  display: none !important;
+}

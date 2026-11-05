@@ -272,6 +272,7 @@ function showView(view) {
   const composer = document.getElementById('composer');
   const feed = document.getElementById('feed');
   const right = document.getElementById('rightCol');
+  const homeProfileCard = document.getElementById('homeProfileCard');
 
   document.querySelectorAll('[data-view]').forEach(button =>
     button.classList.toggle('active', button.dataset.view === view)
@@ -280,6 +281,9 @@ function showView(view) {
   document.querySelectorAll('.extra-view').forEach(node => node.remove());
 
   if (view === 'Início') {
+    homeProfileCard.hidden = false;
+    window.dispatchEvent(new Event('nexus:show-home'));
+
     welcome.hidden = false;
     feedHead.hidden = false;
     composer.hidden = false;
@@ -294,11 +298,11 @@ function showView(view) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
+if (homeProfileCard) homeProfileCard.hidden = true;
 
-  welcome.hidden = true;
-  feedHead.hidden = true;
-  composer.hidden = true;
-  feed.hidden = true;
+welcome.hidden = true;
+feedHead.hidden = true;
+composer.hidden = true;
 
   if (right) right.hidden = true;
 
@@ -390,16 +394,6 @@ page.innerHTML = `
  main.appendChild(page);
 
 page.style.display = 'block';
-page.style.visibility = 'visible';
-page.style.opacity = '1';
-page.style.position = 'relative';
-page.style.zIndex = '9999';
-
-page.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-console.log('PERFIL FOI INSERIDO:', page);
-console.log('ELEMENTO MAIN:', main);
-console.log('DIMENSÕES:', page.getBoundingClientRect());
 
   window.dispatchEvent(
     new CustomEvent('nexus:open-profile', {
@@ -713,6 +707,7 @@ async function updateHomeProfile() {
     console.error('Erro ao atualizar cartão do perfil:', error);
   }
 }
+window.addEventListener('nexus:show-home', updateHomeProfile);
 let mode = 'login';
 
 
@@ -968,9 +963,9 @@ photo.style.cursor = 'pointer';
         updateTheme();
 
         message.textContent = 'Perfil atualizado com sucesso! 🎮';
-        setTimeout(() => {
-          showView('Início');
-        }, 900);
+
+       await updateHomeProfile();
+       showView('Início');
 
       } catch (error) {
         message.textContent = 'Erro ao salvar: ' + error.message;
