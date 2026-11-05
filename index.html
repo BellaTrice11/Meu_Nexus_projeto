@@ -304,6 +304,7 @@ if (homeProfileCard) homeProfileCard.hidden = true;
 welcome.hidden = true;
 feedHead.hidden = true;
 composer.hidden = true;
+feed.hidden = true;
 
   if (right) right.hidden = true;
 
@@ -395,6 +396,7 @@ page.innerHTML = `
  main.appendChild(page);
 
 page.style.display = 'block';
+console.log('PERFIL ABERTO:', page, page.offsetHeight);
 
   window.dispatchEvent(
     new CustomEvent('nexus:open-profile', {
