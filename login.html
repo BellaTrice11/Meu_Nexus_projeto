@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nexus Gaming</title>
+  <script type="module" crossorigin src="/Meu_Nexus_projeto/assets/login-DrEBd3hx.js"></script>
+  <link rel="modulepreload" crossorigin href="/Meu_Nexus_projeto/assets/supabase-Dj7Gij6m.js">
+  <link rel="stylesheet" crossorigin href="/Meu_Nexus_projeto/assets/login-DWHruY1y.css">
+</head>
+<body>
+    <div id="nexus-auth">
+  <div class="nexus-card">
+    <h1 class="nexus-logo">NEXUS GAMING</h1>
+    <p id="nexus-auth-subtitle" class="nexus-subtitle">
+      Entre no seu universo gamer
+    </p>
+
+    <form id="nexus-auth-form">
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="nexus-field">
+        <label for="nexus-email">E-mail</label>
+        <input
+          id="nexus-email"
+          type="email"
+          autocomplete="email"
+          placeholder="seu@email.com"
+          required
+        >
+      </div>
+
+      <div id="nexus-username-field" class="nexus-field" hidden>
+        <label for="nexus-username">Nome de usuário</label>
+        <input
+          id="nexus-username"
+          type="text"
+          autocomplete="username"
+          minlength="3"
+          maxlength="20"
+          pattern="[A-Za-z0-9_]+"
+          placeholder="Ex.: Gamer_123"
+        >
+        <small style="display:block;margin-top:7px;color:#a9a0c2;">
+          Use de 3 a 20 letras, números ou _ (sem espaços).
+        </small>
+      </div>
+
+      <div id="nexus-password-field" class="nexus-field">
+        <label for="nexus-password">Senha</label>
+        <input
+          id="nexus-password"
+          type="password"
+          autocomplete="current-password"
+          minlength="6"
+          placeholder="Minimo de 6 caracteres"
+          required
+        >
+      </div>
+
+      <div id="nexus-confirm-field" class="nexus-field" hidden>
+        <label for="nexus-confirm-password">Confirmar senha</label>
+        <input
+          id="nexus-confirm-password"
+          type="password"
+          autocomplete="new-password"
+          minlength="6"
+          placeholder="Digite a senha novamente"
+        >
+      </div>
+
+      <button id="nexus-submit" class="nexus-main-button" type="submit">
+        ENTRAR NA NEXUS
+      </button>
+
+      <button
+        id="nexus-forgot"
+        class="nexus-link-button"
+        type="button"
+      >
+        Esqueci minha senha
+      </button>
+
+      <button
+        id="nexus-switch"
+        class="nexus-link-button"
+        type="button">
+        Novo cadastro
+      </button>
+
+      <p id="nexus-auth-message" class="nexus-message" role="status"
+         aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+</body>
+</html>
