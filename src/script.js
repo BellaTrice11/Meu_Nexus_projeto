@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { renderFriendsView } from './friend-system.js';
 
 /* ==========================================================================
    ESTADO LOCAL E TOAST
@@ -319,7 +320,14 @@ export function showView(view) {
   if (feedHead) feedHead.hidden = true;
   if (composer) composer.hidden = true;
   if (feed) feed.hidden = true;
+if (view === 'Amigos') {
+  const page = document.createElement('section');
+  page.className = 'extra-view';
+  main.appendChild(page);
 
+  renderFriendsView(page, supabase, notify);
+  return;
+}
   const page = document.createElement('section');
   page.className = 'extra-view';
 
