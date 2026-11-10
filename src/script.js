@@ -396,6 +396,62 @@ export function showView(view) {
   main.appendChild(page);
   main.scrollTo({ top: 0, behavior: 'smooth' });
 }
+/* ==========================================================================
+   ABRIR PERFIL DE OUTRO JOGADOR
+   ========================================================================== */
+async function openFriendProfile(userId) {
+  const main = document.getElementById('mainContent');
+  const feedHead = document.getElementById('feedHead');
+  const composer = document.getElementById('composer');
+  const feed = document.getElementById('feed');
+  const welcome = document.getElementById('welcome');
+  const right = document.getElementById('rightCol');
+  const homeProfileCard = document.getElementById('homeProfileCard');
+
+  if (!main || !userId) return;
+
+  document.querySelectorAll('[data-view]').forEach(button => {
+    button.classList.remove('active');
+  });
+
+  document.querySelectorAll('.extra-view').forEach(node => node.remove());
+
+  if (homeProfileCard) homeProfileCard.hidden = true;
+  if (welcome) welcome.hidden = true;
+  if (right) right.hidden = true;
+  if (feedHead) feedHead.hidden = false;
+  if (composer) composer.hidden = true;
+  if (feed) feed.hidden = true;
+
+  const page = document.createElement('section');
+  page.className = 'extra-view nexus-profile';
+
+  const template = document.getElementById('profile-template');
+
+  if (!template) {
+    notify('Modelo de perfil não encontrado.');
+    return;
+  }
+
+  page.append(template.content.cloneNode(true));
+  main.insertBefore(page, feedHead);
+
+  window.dispatchEvent(
+    new CustomEvent('nexus:open-profile', {
+      detail: {
+        page,
+        userId,
+        readOnly: true
+      }
+    })
+  );
+
+  main.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('nexus:open-friend-profile', event => {
+  openFriendProfile(event.detail.userId);
+});
 
 /* ==========================================================================
    DELEGAÇÃO DE EVENTOS DE CLIQUE (RESOLVE BOTÕES DE LOGOUT E FEED)
@@ -655,6 +711,9 @@ function extensionFrom(file) {
 window.addEventListener('nexus:open-profile', async (event) => {
   const page = event.detail.page;
 
+    const targetUserId = event.detail.userId;
+  const readOnly = event.detail.readOnly === true;
+
   const photo = page.querySelector('#profile-photo');
   const photoInput = page.querySelector('#profile-photo-input');
   const photoLabel = page.querySelector('label[for="profile-photo-input"]');
@@ -674,9 +733,27 @@ window.addEventListener('nexus:open-profile', async (event) => {
   const message = page.querySelector('#profile-message');
 
   try {
-    const profile = await loadNexusProfile();
-    if (!profile) throw new Error('Usuário não encontrado.');
+   let profile;
 
+if (readOnly) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, username, status, avatar_url, cover_url, profile_theme')
+    .eq('id', targetUserId)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new Error('Perfil deste jogador não encontrado.');
+  }
+
+  profile = data;
+} else {
+  profile = await loadNexusProfile();
+}
+
+if (!profile) throw new Error('Usuário não encontrado.');
     if (customization) customization.hidden = true;
     if (photoLabel) photoLabel.hidden = true;
     if (photo) photo.hidden = !profile.avatar_url;
@@ -686,12 +763,14 @@ window.addEventListener('nexus:open-profile', async (event) => {
       if (photoLabel) photoLabel.hidden = false;
     }
 
-    if (editButton) editButton.addEventListener('click', openProfileEditor);
-    if (photo) {
-      photo.addEventListener('click', openProfileEditor);
-      photo.style.cursor = 'pointer';
-    }
+   if (!readOnly) {
+  if (editButton) editButton.addEventListener('click', openProfileEditor);
 
+  if (photo) {
+    photo.addEventListener('click', openProfileEditor);
+    photo.style.cursor = 'pointer';
+  }
+}
     if (nameInput) nameInput.value = profile.username || '';
     if (gamerName) gamerName.textContent = profile.username || 'Gamer';
     if (statusSelect) statusSelect.value = profile.status || 'online';
@@ -719,6 +798,22 @@ window.addEventListener('nexus:open-profile', async (event) => {
 
     updateTheme();
     updateStatusText();
+    if (readOnly) {
+  if (customization) customization.hidden = true;
+  if (editButton) editButton.hidden = true;
+  if (photoLabel) photoLabel.hidden = true;
+  if (photoInput) photoInput.hidden = true;
+  if (coverInput) coverInput.hidden = true;
+  if (saveButton) saveButton.hidden = true;
+  if (message) message.hidden = true;
+
+  if (photo) {
+    photo.style.cursor = 'default';
+    photo.style.pointerEvents = 'none';
+  }
+
+  return;
+}
 
     if (themeSelect) {
       themeSelect.addEventListener('change', () => {

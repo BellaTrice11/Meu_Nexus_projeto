@@ -54,16 +54,33 @@ export function initFriendsModal(supabase, notify)
     return p;
   }
 
-  function createPlayerCard(
+function createPlayerCard(
   username,
   status,
   buttonText,
   action,
   buttonStyleClass = '',
-  avatarUrl = null
+  avatarUrl = null,
+  onCardClick = null
 ) {
   const card = document.createElement('div');
   card.className = 'player-card';
+  if (onCardClick) {
+  card.style.cursor = 'pointer';
+
+  card.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return;
+    onCardClick();
+  });
+}
+  if (onCardClick) {
+  card.style.cursor = 'pointer';
+
+  card.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return;
+    onCardClick();
+  });
+}
 
   const initial = username
     ? username.charAt(0).toUpperCase()
@@ -130,7 +147,7 @@ statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
 
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, username, status, avatar_url')
+      .select('id, username, status, avatar_url, cover_url, profile_theme')
       .in('id', uniqueIds);
 
     if (error) {
@@ -242,7 +259,7 @@ for (const item of (requests || [])) {
       }
     }
 
-   // Renderizar Meus Amigos
+  // Renderizar Meus Amigos
 if (!accepted.length) {
   friendsArea.append(createMessage('Você ainda não tem amigos adicionados.'));
 } else {
@@ -275,7 +292,16 @@ if (!accepted.length) {
           loadData();
         },
         '',
-        profile?.avatar_url
+        profile?.avatar_url,
+        () => {
+          window.dispatchEvent(
+            new CustomEvent('nexus:open-friend-profile', {
+              detail: { userId: otherId }
+            })
+          );
+
+          window.closeFriendsModal();
+        }
       )
     );
   }
