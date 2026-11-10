@@ -1,0 +1,360 @@
+
+<!--
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS GAMING V2 — Comunidade Gamer</title>
+  <link rel="stylesheet" href="./src/css/dashboard.css">
+  <link rel="stylesheet" href="./src/css/friends_style.css">
+</head>
+<body>
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">N</div>
+        <div class="brand-name">NEXUS <span>GAMING V2</span></div>
+      </div>
+      <div class="search">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" type="search" placeholder="Buscar jogos, jogadores, comunidades..." aria-label="Pesquisar">
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="notify-btn" aria-label="Notificações">♧</button>
+        <button class="icon-btn" aria-label="Mensagens" data-go="Mensagens">✉</button>
+        <button class="avatar" aria-label="Abrir perfil" data-go="Perfil">JG</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="nav-card">
+          <button class="nav-item active" data-view="Início"><span class="nav-icon">⌂</span> Início</button>
+          <button class="nav-item" data-view="Amigos"><span class="nav-icon">♧</span> Amigos</button>
+          <button class="nav-item" data-view="Jogos"><span class="nav-icon">🎮</span> Meus jogos</button>
+          <button class="nav-item" data-view="Comunidades"><span class="nav-icon">🌐</span> Comunidades</button>
+          <button class="nav-item" data-view="Mensagens"><span class="nav-icon">✉</span> Mensagens</button>
+          <button class="nav-item" data-view="Conquistas"><span class="nav-icon">🏆</span> Conquistas</button>
+          <button class="nav-item" data-view="Perfil"><span class="nav-icon">👤</span> Perfil</button>
+          <button class="nav-item" id="invite-friends" type="button">
+            <span class="nav-icon">📨</span> Convidar amigos
+          </button>
+          <button class="nav-item" id="logout-btn" type="button">
+            <span class="nav-icon">⏻</span> Sair
+          </button>
+        </div>
+        <div>
+          <div class="side-title">SUAS COMUNIDADES</div>
+          <div class="mini-community"><div class="game-icon">⛏️</div><div>Minecraft Brasil<small>12,4 mil membros</small></div></div>
+          <div class="mini-community"><div class="game-icon">🗡️</div><div>Guerreiros de Hyrule<small>8,2 mil membros</small></div></div>
+          <div class="mini-community"><div class="game-icon">🚗</div><div>GTA V Brasil<small>21,8 mil membros</small></div></div>
+          <button class="nav-item" data-view="Comunidades" style="color:#a98aff;margin-top:5px">＋ Explorar comunidades</button>
+        </div>
+      </aside>
+
+      <main class="main" id="mainContent">
+        <section class="welcome profile-hero-banner" id="welcome">
+          <div class="home-profile-info">
+            <img id="homeProfilePhoto" src="" alt="Foto de perfil">
+            <div class="home-profile-details">
+              <h2 id="homeProfileName">TRICE</h2>
+              <span id="homeProfileStatus">● Online</span>
+            </div>
+          </div>
+          <div class="eyebrow">
+            <span class="eyebrow-text">Sua próxima aventura começa aqui</span>
+          </div>
+          <h1>O seu mundo.<br><span class="gradient-text">A sua comunidade.</span></h1>
+          <p>Encontre jogadores, compartilhe suas conquistas e faça parte de comunidades que vivem os mesmos jogos que você.</p>
+        </section>
+
+        <section class="home-profile-card" id="homeProfileCard">
+          <div class="home-profile-cover">
+            <img id="homeProfileCover" src="" alt="Capa do perfil">
+          </div>
+          <div class="home-profile-info">
+            <img id="homeProfilePhotoCard" src="" alt="Foto de perfil">
+            <div class="home-profile-details">
+              <h2 id="homeProfileNameCard">TRICE</h2>
+            </div>
+            <button class="soft-btn" data-go="Perfil">Ver perfil</button>
+          </div>
+        </section>
+
+        <div class="feed-head" id="feedHead">
+          <h2 id="feedTitle">Feed da comunidade</h2>
+          <select id="feedSort" aria-label="Ordenar feed">
+            <option value="recent">Mais recentes</option>
+            <option value="popular">Mais populares</option>
+          </select>
+        </div>
+
+        <section class="composer" id="composer">
+          <div class="composer-top">
+            <div class="avatar">JG</div>
+            <textarea id="composerText" maxlength="500" placeholder="E aí, jogador... qual é a boa de hoje?"></textarea>
+          </div>
+          <div class="composer-bottom">
+            <div class="attach">
+              <button class="soft-btn" id="btn-attach-img">▧ Foto</button>
+              <button class="soft-btn" id="btn-tag-game">🎮 Marcar jogo</button>
+            </div>
+            <button class="primary-btn" id="publishBtn">Publicar ↗</button>
+          </div>
+        </section>
+
+        <div id="feed">
+          <article class="post" data-post-id="sample_minecraft" data-base-likes="128" data-likes="128" data-search="minecraft construção castelo survival">
+            <div class="post-head">
+              <div class="post-avatar green">PX</div>
+              <div>
+                <div class="post-user">PixelWarrior <span class="badge">LVL 28</span></div>
+                <div class="post-meta">Na comunidade Minecraft Brasil · há 12 min</div>
+              </div>
+              <button class="post-menu" aria-label="Mais opções">···</button>
+            </div>
+            <div class="post-copy">Depois de 3 dias construindo, finalmente terminei meu castelo no survival! ⛏️🔥 O que vocês acham? Próximo projeto: uma cidade inteira!</div>
+            <div class="game-preview">
+              <div class="preview-label"><small>Construção da comunidade</small><strong>MEU NOVO MUNDO</strong></div>
+              <div class="preview-emoji">🏰</div>
+            </div>
+            <div class="post-actions">
+              <button class="action-btn btn-like">♡ Curtir <span>128</span></button>
+              <button class="action-btn btn-comment">▢ Comentar</button>
+              <button class="action-btn btn-share">↗ Compartilhar</button>
+            </div>
+            <div class="comment-area" hidden></div>
+          </article>
+
+          <article class="post" data-post-id="sample_zelda" data-base-likes="86" data-likes="86" data-search="zelda tears kingdom hyrule jogo aventura">
+            <div class="post-head">
+              <div class="post-avatar orange">HY</div>
+              <div>
+                <div class="post-user">HeroOfHyrule <span class="badge">LVL 19</span></div>
+                <div class="post-meta">Na comunidade Guerreiros de Hyrule · há 34 min</div>
+              </div>
+              <button class="post-menu" aria-label="Mais opções">···</button>
+            </div>
+            <div class="post-copy">Aquela sensação de descobrir uma área secreta em Hyrule pela primeira vez é simplesmente incrível. 🗡️✨ Qual jogo da franquia vocês mais gostam?</div>
+            <div class="game-preview purple">
+              <div class="preview-label"><small>Discussão em destaque</small><strong>AVENTURAS EM HYRULE</strong></div>
+              <div class="preview-emoji">🗡️</div>
+            </div>
+            <div class="post-actions">
+              <button class="action-btn btn-like">♡ Curtir <span>86</span></button>
+              <button class="action-btn btn-comment">▢ Comentar</button>
+              <button class="action-btn btn-share">↗ Compartilhar</button>
+            </div>
+            <div class="comment-area" hidden></div>
+          </article>
+
+          <article class="post" data-post-id="sample_gta" data-base-likes="54" data-likes="54" data-search="gta online corrida amigos jogo">
+            <div class="post-head">
+              <div class="post-avatar">GT</div>
+              <div>
+                <div class="post-user">NightRacer <span class="badge">LVL 12</span></div>
+                <div class="post-meta">Na comunidade GTA V Brasil · há 1 h</div>
+              </div>
+              <button class="post-menu" aria-label="Mais opções">···</button>
+            </div>
+            <div class="post-copy">Procurando uma galera tranquila pra fazer umas corridas no GTA Online hoje à noite. Quem anima? 🏎️💨</div>
+            <div class="game-preview greenish">
+              <div class="preview-label"><small>Encontre sua party</small><strong>BORA JOGAR?</strong></div>
+              <div class="preview-emoji">🏎️</div>
+            </div>
+            <div class="post-actions">
+              <button class="action-btn btn-like">♡ Curtir <span>54</span></button>
+              <button class="action-btn btn-comment">▢ Comentar</button>
+              <button class="action-btn btn-share">↗ Compartilhar</button>
+            </div>
+            <div class="comment-area" hidden></div>
+          </article>
+        </div>
+      </main>
+
+      <aside class="right-col" id="rightCol">
+        <section class="side-card">
+          <div class="card-heading">🔥 Comunidades em alta <button class="link-btn" data-go="Comunidades">Ver todas</button></div>
+          <div class="community-card" data-community="Minecraft Brasil">
+            <div class="game-icon">⛏️</div>
+            <div><div class="community-name">Minecraft Brasil</div><div class="community-count">12,4 mil membros</div></div>
+            <button class="join-btn">+ Entrar</button>
+          </div>
+          <div class="community-card" data-community="Guerreiros de Hyrule">
+            <div class="game-icon">🗡️</div>
+            <div><div class="community-name">Guerreiros de Hyrule</div><div class="community-count">8,2 mil membros</div></div>
+            <button class="join-btn">+ Entrar</button>
+          </div>
+          <div class="community-card" data-community="GTA V Brasil">
+            <div class="game-icon">🚗</div>
+            <div><div class="community-name">GTA V Brasil</div><div class="community-count">21,8 mil membros</div></div>
+            <button class="join-btn">+ Entrar</button>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <div class="card-heading">🟢 Jogadores online <button class="link-btn" data-go="Amigos">Ver amigos</button></div>
+          <div class="online-row"><div class="online-avatar">L</div><div><div class="online-name">Luna.exe</div><div class="online-game">Jogando Valorant</div></div><span class="online-dot">●</span></div>
+          <div class="online-row"><div class="online-avatar">R</div><div><div class="online-name">RafaCraft</div><div class="online-game">Jogando Minecraft</div></div><span class="online-dot">●</span></div>
+          <div class="online-row"><div class="online-avatar">M</div><div><div class="online-name">MikaGG</div><div class="online-game">Jogando Fortnite</div></div><span class="online-dot">●</span></div>
+        </section>
+
+        <section class="side-card">
+          <div class="card-heading">📊 A comunidade</div>
+          <div class="stats">
+            <div class="stat"><strong>2,8k</strong><span>Jogadores</span></div>
+            <div class="stat"><strong>146</strong><span>Online agora</span></div>
+            <div class="stat"><strong id="postStat">320</strong><span>Publicações</span></div>
+            <div class="stat"><strong>58</strong><span>Comunidades</span></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Navegação móvel">
+      <button class="active" data-view="Início"><span>⌂</span>Início</button>
+      <button data-view="Amigos"><span>♧</span>Amigos</button>
+      <button data-view="Comunidades"><span>🌐</span>Comunidades</button>
+      <button data-view="Mensagens"><span>✉</span>Mensagens</button>
+      <button data-view="Perfil"><span>👤</span>Perfil</button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <template id="profile-template">
+    <div class="nexus-profile-card">
+      <div class="profile-cover" id="profile-cover">
+        <img id="profile-cover-image" src="" alt="Capa do perfil">
+        <input id="profile-cover-input" type="file" accept="image/*" hidden>
+      </div>
+
+      <div class="profile-identity">
+        <div class="profile-avatar-area">
+          <button id="profile-edit-button" type="button">✨ Editar perfil</button>
+          <img id="profile-photo" src="" alt="Foto do jogador" hidden>
+          <label for="profile-photo-input">📷 Trocar foto</label>
+          <input id="profile-photo-input" type="file" accept="image/*" hidden>
+        </div>
+
+        <div class="profile-details">
+          <h2 id="profile-gamer-name"></h2>
+          <p id="profile-status">● Carregando status...</p>
+        </div>
+      </div>
+
+      <div class="profile-customization">
+        <h3>Personalize seu universo</h3>
+        <label for="profile-theme-select">Estilo do perfil</label>
+        <select id="profile-theme-select">
+          <option value="galaxy">🌌 Galáxia</option>
+          <option value="technology">🎮 Tecnologia</option>
+          <option value="custom">🖼️ Minha capa personalizada</option>
+        </select>
+
+        <label for="profile-name-input">Nome gamer</label>
+        <input id="profile-name-input" maxlength="20" placeholder="Seu nome gamer">
+
+        <label for="profile-status-select">Minha presença</label>
+        <select id="profile-status-select">
+          <option value="online">🟢 Online</option>
+          <option value="away">🌙 Ausente</option>
+          <option value="offline">⚫ Offline</option>
+        </select>
+
+        <button id="profile-save-button" class="primary-btn">Salvar personalização</button>
+        <p id="profile-message"></p>
+      </div>
+    </div>
+  </template>
+   <!-- Container de Notificação Toast -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <main class="app-container">
+    <header class="search-header">
+      <span class="badge">Social Hub</span>
+      <h1>Encontre novos <span>players</span></h1>
+      <p>Conecte-se com outros jogadores e monte seu esquadrão.</p>
+      
+      <div class="search-box">
+        <div class="input-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="searchInput" placeholder="Digite o nickname do jogador..." autocomplete="off" />
+        </div>
+        <button id="searchButton" class="btn-search">
+          <span>Buscar</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="results-section">
+      <div class="results-header">
+        <h2>Resultados da busca</h2>
+        <span id="resultsCount" class="results-count">0 encontrados</span>
+      </div>
+
+      <div id="searchResults" class="grid-results">
+        <!-- Cards gerados via JS entram aqui -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Janela Flutuante / Modal de Amigos -->
+<div id="friendModalOverlay" class="modal-overlay">
+  <div class="modal-window">
+    
+    <!-- Botão de Fechar no canto superior direito -->
+    <button id="closeModalBtn" class="modal-close-btn" aria-label="Fechar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <!-- Cabeçalho do Modal -->
+    <header class="search-header">
+      <span class="badge">Social Hub</span>
+      <h1>Encontre novos <span>players</span></h1>
+      <p>Encontre novos players, compartilhe momentos e adicione o nickname do jogador.</p>
+      
+      <div class="search-box">
+        <div class="input-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="searchInput" placeholder="Digite o nickname do jogador..." autocomplete="off" />
+        </div>
+        <button id="searchButton" class="btn-search">
+          <span>Buscar</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Seção de Resultados e Listas -->
+    <section class="results-section">
+      <div class="results-header">
+        <h2>Resultados da busca</h2>
+        <span id="resultsCount" class="results-count">0 encontrados</span>
+      </div>
+
+      <!-- Onde os cards injetados pelo seu JavaScript vão aparecer -->
+      <div id="searchResults" class="grid-results"></div>
+
+      <!-- Outras áreas de listas do seu script original -->
+      <div class="sections-group" style="margin-top: 2rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Solicitações recebidas</h3>
+        <div id="requestsArea" class="grid-results"></div>
+
+        <h3 style="font-size: 1.1rem; margin: 1.5rem 0 0.75rem 0;">Meus amigos</h3>
+        <div id="friendsArea" class="grid-results"></div>
+
+        <h3 style="font-size: 1.1rem; margin: 1.5rem 0 0.75rem 0;">Solicitações enviadas</h3>
+        <div id="sentArea" class="grid-results"></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+  <script type="module" src="./src/script.js"></script>
+  <script type="module" src="./src/friendsModal.js"></script>
+</body>
+</html>

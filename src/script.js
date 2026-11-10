@@ -1,5 +1,5 @@
 import { supabase } from './supabase.js';
-import { renderFriendsView } from './friend-system.js';
+import { initFriendsModal } from './friendsModal.js';
 
 /* ==========================================================================
    ESTADO LOCAL E TOAST
@@ -320,14 +320,16 @@ export function showView(view) {
   if (feedHead) feedHead.hidden = true;
   if (composer) composer.hidden = true;
   if (feed) feed.hidden = true;
-if (view === 'Amigos') {
-  const page = document.createElement('section');
-  page.className = 'extra-view';
-  main.appendChild(page);
 
-  renderFriendsView(page, supabase, notify);
-  return;
-}
+  if (view === 'Amigos') {
+    if (typeof window.openFriendsModal === 'function') {
+      window.openFriendsModal();
+    } else {
+      notify('O sistema de amigos ainda não foi carregado.');
+    }
+    return;
+  } 
+
   const page = document.createElement('section');
   page.className = 'extra-view';
 
@@ -474,15 +476,19 @@ document.addEventListener('click', async (event) => {
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError || !currentSession) {
-      location.replace('./login.html');
-      return;
-    }
+   const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
+
+if (sessionError || !currentSession) {
+  location.replace('./login.html');
+  return;
+}
+
 
     const appElement = document.getElementById('app');
     if (appElement) appElement.hidden = false;
+
+    // Inicializa o sistema de amigos
+initFriendsModal(supabase, notify);
 
     loadState();
     restoreSavedPosts();
