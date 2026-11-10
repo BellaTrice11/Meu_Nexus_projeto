@@ -14,24 +14,57 @@ export function initFriendsModal(supabase, notify) {
   // Canal Realtime unificado para amigos e solicitações
   let friendsChannel = null;
 
-  async function loadDataWithRealtime() {
-    if (!friendsChannel) {
-      friendsChannel = supabase
-        .channel('nexus-friends-realtime')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'profiles' },
-          () => loadData()
-        )
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'friend_requests' },
-          () => loadData()
-        )
-        .subscribe();
+
+function updateProfileStatus(profile) {
+  if (!profile?.id) return;
+
+  const cards = document.querySelectorAll(
+    `.player-card[data-user-id="${profile.id}"]`
+  );
+
+  const statuses = {
+    online: '🟢 Online',
+    away: '🌙 Ausente',
+    offline: '⚫ Offline'
+  };
+
+  cards.forEach(card => {
+    const statusText = card.querySelector('.player-status-text');
+    const statusDot = card.querySelector('.status-dot');
+
+    if (statusText) {
+      statusText.textContent = statuses[profile.status] || '⚫ Offline';
     }
-    await loadData();
+
+    if (statusDot) {
+      statusDot.classList.toggle('online', profile.status === 'online');
+      statusDot.classList.toggle('offline', profile.status !== 'online');
+    }
+  });
+}
+
+
+ 
+async function loadDataWithRealtime() {
+  if (!friendsChannel) {
+    friendsChannel = supabase
+      .channel('nexus-friends-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles' },
+        (payload) => updateProfileStatus(payload.new)
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'friend_requests' },
+        () => loadData()
+      )
+      .subscribe();
   }
+
+  await loadData();
+}
+
 
   // Funções para controlar a abertura e fechamento da janela flutuante
   window.openFriendsModal = async () => {
@@ -73,17 +106,25 @@ export function initFriendsModal(supabase, notify) {
     return p;
   }
 
-  function createPlayerCard(
+  
+function createPlayerCard(
     username,
     status,
     buttonText,
     action,
     buttonStyleClass = '',
     avatarUrl = null,
-    onCardClick = null
+    onCardClick = null,
+    userId = null
   ) {
+
     const card = document.createElement('div');
     card.className = 'player-card';
+
+    if (userId) {
+       card.dataset.userId = userId;
+    }
+
     if (onCardClick) {
       card.style.cursor = 'pointer';
 
@@ -316,7 +357,8 @@ export function initFriendsModal(supabase, notify) {
               );
 
               window.closeFriendsModal();
-            }
+            },
+            otherId
           )
         );
       }

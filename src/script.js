@@ -18,6 +18,7 @@ let presenceInterval = null;
 let awayTimeout = null;
 let lastActivity = Date.now();
 let lastPresenceStatus = null;
+let manualPresence = false;
 
 async function updateMyPresence(status) {
   if (!nexusCurrentUser || lastPresenceStatus === status) return;
@@ -41,14 +42,16 @@ async function updateMyPresence(status) {
 function registerActivity() {
   lastActivity = Date.now();
 
-  if (document.visibilityState !== 'visible') return;
+  if (document.visibilityState !== 'visible' || manualPresence) return;
 
   updateMyPresence('online');
 
   clearTimeout(awayTimeout);
 
   awayTimeout = setTimeout(() => {
-    updateMyPresence('away');
+    if (!manualPresence) {
+      updateMyPresence('away');
+    }
   }, 5 * 60 * 1000);
 }
 
@@ -68,10 +71,12 @@ function startPresence() {
 
     if (document.visibilityState !== 'visible') return;
 
-    if (inactiveTime >= 5 * 60 * 1000) {
-      updateMyPresence('away');
-    } else {
-      updateMyPresence('online');
+    if (!manualPresence) {
+      if (inactiveTime >= 5 * 60 * 1000) {
+        updateMyPresence('away');
+      } else {
+        updateMyPresence('online');
+      }
     }
 
     supabase
@@ -94,10 +99,10 @@ document.addEventListener('touchstart', registerActivity);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     registerActivity();
-  } else {
+  } else if (!manualPresence) {
     updateMyPresence('away');
   }
-});
+});;
 
 // Atualiza para offline no instante em que o navegador/aba for fechado
 window.addEventListener('beforeunload', () => {
@@ -916,11 +921,24 @@ window.addEventListener('nexus:open-profile', async (event) => {
       if (cover) cover.style.display = theme === 'custom' && profile.cover_url ? 'block' : 'none';
     }
 
-    function updateStatusText() {
-      if (!statusSelect || !statusText) return;
-      const labels = { online: '🟢 Online', away: '🌙 Ausente', offline: '⚫ Offline' };
-      statusText.textContent = labels[statusSelect.value];
-    }
+   
+function updateStatusText() {
+  if (!statusSelect || !statusText) return;
+
+  const labels = {
+    online: '🟢 Online',
+    away: '🌙 Ausente',
+    offline: '⚫ Offline'
+  };
+
+  const status = statusSelect.value;
+
+  statusText.textContent = labels[status] || '⚫ Offline';
+
+  if (nexusCurrentUser) {
+    updateMyPresence(status);
+  }
+}
 
     updateTheme();
     updateStatusText();
@@ -950,13 +968,12 @@ window.addEventListener('nexus:open-profile', async (event) => {
       });
     }
 
-    if (statusSelect) {
-      statusSelect.addEventListener('change', () => {
-        updateStatusText();
-        // Atualiza a variável local imediatamente ao alterar o seletor no perfil
-        lastPresenceStatus = statusSelect.value;
-      });
-    }
+   if (statusSelect) {
+     statusSelect.addEventListener('change', () => {
+       manualPresence = true;
+       updateStatusText();
+     });
+   }}
 
     if (coverInput) {
       coverInput.addEventListener('change', async () => {
@@ -1091,6 +1108,7 @@ window.addEventListener('nexus:open-profile', async (event) => {
 
           // Atualiza o estado da presença local para sincronizar imediatamente
           lastPresenceStatus = statusSelect.value;
+          manualPresence = true;
 
           if (gamerName) gamerName.textContent = username;
           updateStatusText();
