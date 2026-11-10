@@ -118,17 +118,51 @@ export function initFriendsModal(supabase, notify) {
       return;
     }
 
-    const received = (requests || []).filter(
-      item => item.receiver_id === user.id && item.status === 'pending'
-    );
+   // Identifica amizades já aceitas
+const acceptedPairs = new Set(
+  (requests || [])
+    .filter(item => item.status === 'accepted')
+    .map(item => [item.sender_id, item.receiver_id].sort().join('_'))
+);
 
-    const sent = (requests || []).filter(
-      item => item.sender_id === user.id && item.status === 'pending'
-    );
+// Solicitações recebidas
+const received = (requests || []).filter(item => {
+  const pair = [item.sender_id, item.receiver_id].sort().join('_');
 
-    const accepted = (requests || []).filter(
-      item => item.status === 'accepted'
-    );
+  return (
+    item.receiver_id === user.id &&
+    item.status === 'pending' &&
+    !acceptedPairs.has(pair)
+  );
+});
+
+// Solicitações enviadas
+const sent = (requests || []).filter(item => {
+  const pair = [item.sender_id, item.receiver_id].sort().join('_');
+
+  return (
+    item.sender_id === user.id &&
+    item.status === 'pending' &&
+    !acceptedPairs.has(pair)
+  );
+});
+
+// Amizades aceitas sem duplicação
+const accepted = [];
+const addedFriends = new Set();
+
+for (const item of (requests || [])) {
+  if (item.status !== 'accepted') continue;
+
+  const otherId = item.sender_id === user.id
+    ? item.receiver_id
+    : item.sender_id;
+
+  if (addedFriends.has(otherId)) continue;
+
+  addedFriends.add(otherId);
+  accepted.push(item);
+}
 
     const otherIds = (requests || []).map(item =>
       item.sender_id === user.id ? item.receiver_id : item.sender_id
@@ -252,11 +286,11 @@ export function initFriendsModal(supabase, notify) {
       .select('sender_id, receiver_id, status')
       .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
 
-    for (const player of players) {
-      const existing = (existingRequests || []).find(request =>
-        (request.sender_id === user.id && request.receiver_id === player.id) ||
-        (request.sender_id === player.id && request.receiver_id === user.id)
-      );
+   for (const player of players) {
+     const existing = (existingRequests || []).find(request =>
+       (request.sender_id === user.id && request.receiver_id === player.id) ||
+       (request.sender_id === player.id && request.receiver_id === user.id)
+     );
 
       let buttonText = 'Adicionar';
       let buttonStyleClass = '';
