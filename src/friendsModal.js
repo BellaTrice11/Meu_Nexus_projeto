@@ -53,34 +53,75 @@ export function initFriendsModal(supabase, notify) {
     return p;
   }
 
-  function createPlayerCard(username, status, buttonText, action, buttonStyleClass = '') {
-    const card = document.createElement('div');
-    card.className = 'player-card';
+  function createPlayerCard(
+  username,
+  status,
+  buttonText,
+  action,
+  buttonStyleClass = '',
+  avatarUrl = null
+) {
+  const card = document.createElement('div');
+  card.className = 'player-card';
 
-    const initial = username ? username.charAt(0).toUpperCase() : '?';
-    const isOnline = status === 'online';
-    
-    const statusDisplay = (status === 'online' || status === 'offline') 
-      ? (isOnline ? '● Online' : '○ Offline')
-      : status;
+  const initial = username
+    ? username.charAt(0).toUpperCase()
+    : '?';
 
-    card.innerHTML = `
-      <div class="avatar-wrapper">
-        <div class="avatar-placeholder">${initial}</div>
-        <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
-      </div>
-      <div class="player-info">
-        <h3>${username || 'Jogador'}</h3>
-        <p class="player-status-text">${statusDisplay}</p>
-      </div>
-      <button class="btn-action ${buttonStyleClass}">${buttonText}</button>
-    `;
+  const isOnline = status === 'online';
 
-    const button = card.querySelector('button');
-    button.addEventListener('click', action);
+  const statusDisplay = (status === 'online' || status === 'offline')
+    ? (isOnline ? '● Online' : '○ Offline')
+    : status;
 
-    return card;
-  }
+  const avatarWrapper = document.createElement('div');
+  avatarWrapper.className = 'avatar-wrapper';
+
+ const avatar = document.createElement('div');
+avatar.className = 'avatar-placeholder';
+
+if (avatarUrl) {
+  const img = document.createElement('img');
+  img.src = avatarUrl;
+  img.alt = `Foto de ${username}`;
+  img.className = 'player-avatar';
+
+  img.onerror = () => {
+    img.remove();
+    avatar.textContent = initial;
+  };
+
+  avatar.appendChild(img);
+} else {
+  avatar.textContent = initial;
+}
+
+const statusDot = document.createElement('span');
+statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
+  avatarWrapper.append(avatar, statusDot);
+
+  const playerInfo = document.createElement('div');
+  playerInfo.className = 'player-info';
+
+  const name = document.createElement('h3');
+  name.textContent = username || 'Jogador';
+
+  const statusText = document.createElement('p');
+  statusText.className = 'player-status-text';
+  statusText.textContent = statusDisplay;
+
+  playerInfo.append(name, statusText);
+
+  const button = document.createElement('button');
+  button.className = `btn-action ${buttonStyleClass}`;
+  button.textContent = buttonText;
+
+  button.addEventListener('click', action);
+
+  card.append(avatarWrapper, playerInfo, button);
+
+  return card;
+}
 
   async function getProfiles(ids) {
     const uniqueIds = [...new Set(ids)].filter(Boolean);
@@ -88,7 +129,7 @@ export function initFriendsModal(supabase, notify) {
 
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, username, status')
+      .select('id, username, status, avatar_url')
       .in('id', uniqueIds);
 
     if (error) {
@@ -200,58 +241,89 @@ for (const item of (requests || [])) {
       }
     }
 
-    // Renderizar Meus Amigos
-    if (!accepted.length) {
-      friendsArea.append(createMessage('Você ainda não tem amigos adicionados.'));
-    } else {
-      for (const friendship of accepted) {
-        const otherId = friendship.sender_id === user.id ? friendship.receiver_id : friendship.sender_id;
-        const profile = profiles[otherId];
+   // Renderizar Meus Amigos
+if (!accepted.length) {
+  friendsArea.append(createMessage('Você ainda não tem amigos adicionados.'));
+} else {
+  for (const friendship of accepted) {
+    const otherId = friendship.sender_id === user.id
+      ? friendship.receiver_id
+      : friendship.sender_id;
 
-        friendsArea.append(
-          createPlayerCard(
-            profile?.username || 'Jogador',
-            profile?.status || 'Membro do NEXUS',
-            'Remover',
-            async () => {
-              if (!confirm('Deseja remover este amigo?')) return;
+    const profile = profiles[otherId];
 
-              const { error } = await supabase
-                .from('friend_requests')
-                .delete()
-                .eq('id', friendship.id);
+    friendsArea.append(
+      createPlayerCard(
+        profile?.username || 'Jogador',
+        profile?.status || 'Membro do NEXUS',
+        'Remover',
+        async () => {
+          if (!confirm('Deseja remover este amigo?')) return;
 
-              if (error) {
-                notify('Não foi possível remover.');
-                return;
-              }
-              notify('Amigo removido.');
-              loadData();
-            },
-            ''
-          )
-        );
-      }
-    }
+          const { error } = await supabase
+            .from('friend_requests')
+            .delete()
+            .eq('id', friendship.id);
 
+          if (error) {
+            notify('Não foi possível remover.');
+            return;
+          }
+
+          notify('Amigo removido.');
+          loadData();
+        },
+        '',
+        profile?.avatar_url
+      )
+    );
+  }
+}
+
+    
     // Renderizar Solicitações Enviadas
     if (!sent.length) {
       sentArea.append(createMessage('Nenhuma solicitação enviada.'));
     } else {
       for (const request of sent) {
         const profile = profiles[request.receiver_id];
+
         sentArea.append(
           createPlayerCard(
             profile?.username || 'Jogador',
             'Aguardando resposta...',
-            'Pendente',
-            () => notify('Sua solicitação está pendente.'),
-            'pending'
+            'Cancelar',
+            async () => {
+              const confirmed = confirm(
+                'Deseja realmente cancelar esta solicitação?'
+              );
+
+              if (!confirmed) return;
+
+              const { error } = await supabase
+                .from('friend_requests')
+                .delete()
+                .eq('id', request.id)
+                .eq('sender_id', user.id)
+                .eq('status', 'pending');
+
+              if (error) {
+                console.error('Erro ao cancelar solicitação:', error);
+                notify('Não foi possível cancelar a solicitação.');
+                return;
+              }
+
+              notify('Solicitação cancelada! ❤️');
+
+              await loadData();
+            },
+            'pending',
+            profile?.avatar_url
           )
         );
       }
     }
-  }
+
 
   async function searchPlayers() {
     const user = await getCurrentUser();
@@ -333,4 +405,5 @@ for (const item of (requests || [])) {
   searchInput.addEventListener('keydown', event => {
     if (event.key === 'Enter') searchPlayers();
   });
+}
 }

@@ -305,3 +305,10 @@
   color: var(--btn-pending-color);
   border-color: rgba(245, 158, 11, 0.2);
 }
+.player-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
