@@ -371,6 +371,47 @@ if (!sent.length) {
 }
 }
 
+/* ==========================================================================
+   ATUALIZAÇÃO AUTOMÁTICA DOS STATUS DOS AMIGOS
+   ========================================================================== */
+
+let profilesChannel = null;
+let refreshTimer = null;
+
+async function startProfilesRealtime() {
+  if (profilesChannel) return;
+
+  const user = await getCurrentUser();
+  if (!user) return;
+
+  profilesChannel = supabase
+    .channel('nexus-profiles-presence')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'profiles'
+      },
+      () => {
+        if (modalOverlay.style.display === 'flex') {
+          clearTimeout(refreshTimer);
+
+          refreshTimer = setTimeout(() => {
+            loadData();
+          }, 300);
+        }
+      }
+    )
+    .subscribe((status) => {
+      if (status === 'CHANNEL_ERROR') {
+        console.error('Erro na conexão Realtime dos perfis.');
+      }
+    });
+}
+
+startProfilesRealtime();
+
   async function searchPlayers() {
     const user = await getCurrentUser();
     if (!user) return;
