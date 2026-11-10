@@ -1,4 +1,5 @@
-export function initFriendsModal(supabase, notify) {
+export function initFriendsModal(supabase, notify)
+ {
   const modalOverlay = document.getElementById('friendModalOverlay');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const searchInput = document.getElementById('searchInput');
@@ -282,48 +283,67 @@ if (!accepted.length) {
 
     
     // Renderizar Solicitações Enviadas
-    if (!sent.length) {
-      sentArea.append(createMessage('Nenhuma solicitação enviada.'));
-    } else {
-      for (const request of sent) {
-        const profile = profiles[request.receiver_id];
+if (!sent.length) {
+  sentArea.append(createMessage('Nenhuma solicitação enviada.'));
+} else {
+  for (const request of sent) {
+    const profile = profiles[request.receiver_id];
 
-        sentArea.append(
-          createPlayerCard(
-            profile?.username || 'Jogador',
-            'Aguardando resposta...',
-            'Cancelar',
-            async () => {
-              const confirmed = confirm(
-                'Deseja realmente cancelar esta solicitação?'
-              );
+    sentArea.append(
+      createPlayerCard(
+        profile?.username || 'Jogador',
+        'Aguardando resposta...',
+        'Cancelar',
+        async () => {
+          console.log('Iniciando cancelamento...');
+          console.log('ID da solicitação:', request.id);
+          console.log('ID do usuário:', user.id);
 
-              if (!confirmed) return;
+          const confirmed = confirm(
+            'Deseja realmente cancelar esta solicitação?'
+          );
 
-              const { error } = await supabase
-                .from('friend_requests')
-                .delete()
-                .eq('id', request.id)
-                .eq('sender_id', user.id)
-                .eq('status', 'pending');
+          if (!confirmed) return;
 
-              if (error) {
-                console.error('Erro ao cancelar solicitação:', error);
-                notify('Não foi possível cancelar a solicitação.');
-                return;
-              }
+          notify('Cancelando solicitação...');
 
-              notify('Solicitação cancelada! ❤️');
+          try {
+            const { data, error } = await supabase
+              .from('friend_requests')
+              .delete()
+              .eq('id', request.id)
+              .eq('sender_id', user.id)
+              .eq('status', 'pending')
+              .select('id');
 
-              await loadData();
-            },
-            'pending',
-            profile?.avatar_url
-          )
-        );
-      }
-    }
+            console.log('Resultado da exclusão:', data);
+            console.log('Erro do Supabase:', error);
 
+            if (error) {
+              notify('Erro: ' + error.message);
+              return;
+            }
+
+            if (!data || data.length === 0) {
+              notify('Nenhuma solicitação foi excluída. Verifique as permissões RLS.');
+              return;
+            }
+
+            notify('Solicitação cancelada! ❤️');
+            await loadData();
+
+          } catch (err) {
+            console.error('Erro inesperado:', err);
+            notify('Falha ao cancelar: ' + err.message);
+          }
+        },
+        'pending',
+        profile?.avatar_url
+      )
+    );
+  }
+}
+}
 
   async function searchPlayers() {
     const user = await getCurrentUser();
@@ -405,5 +425,4 @@ if (!accepted.length) {
   searchInput.addEventListener('keydown', event => {
     if (event.key === 'Enter') searchPlayers();
   });
-}
 }
