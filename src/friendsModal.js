@@ -1,5 +1,4 @@
-export function initFriendsModal(supabase, notify)
- {
+export function initFriendsModal(supabase, notify) {
   const modalOverlay = document.getElementById('friendModalOverlay');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const searchInput = document.getElementById('searchInput');
@@ -12,10 +11,32 @@ export function initFriendsModal(supabase, notify)
 
   if (!modalOverlay) return;
 
+  // Canal Realtime unificado para amigos e solicitações
+  let friendsChannel = null;
+
+  async function loadDataWithRealtime() {
+    if (!friendsChannel) {
+      friendsChannel = supabase
+        .channel('nexus-friends-realtime')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'profiles' },
+          () => loadData()
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'friend_requests' },
+          () => loadData()
+        )
+        .subscribe();
+    }
+    await loadData();
+  }
+
   // Funções para controlar a abertura e fechamento da janela flutuante
   window.openFriendsModal = async () => {
     modalOverlay.style.display = 'flex';
-    await loadData();
+    await loadDataWithRealtime();
   };
 
   window.closeFriendsModal = () => {
@@ -31,8 +52,6 @@ export function initFriendsModal(supabase, notify)
       window.closeFriendsModal();
     }
   });
-
- 
 
   // Validação de Sessão do Usuário
   async function getCurrentUser() {
@@ -54,92 +73,88 @@ export function initFriendsModal(supabase, notify)
     return p;
   }
 
-function createPlayerCard(
-  username,
-  status,
-  buttonText,
-  action,
-  buttonStyleClass = '',
-  avatarUrl = null,
-  onCardClick = null
-) {
-  const card = document.createElement('div');
-  card.className = 'player-card';
-  if (onCardClick) {
-  card.style.cursor = 'pointer';
+  function createPlayerCard(
+    username,
+    status,
+    buttonText,
+    action,
+    buttonStyleClass = '',
+    avatarUrl = null,
+    onCardClick = null
+  ) {
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    if (onCardClick) {
+      card.style.cursor = 'pointer';
 
-  card.addEventListener('click', (event) => {
-    if (event.target.closest('button')) return;
-    onCardClick();
-  });
-}
-  if (onCardClick) {
-  card.style.cursor = 'pointer';
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('button')) return;
+        onCardClick();
+      });
+    }
 
-  card.addEventListener('click', (event) => {
-    if (event.target.closest('button')) return;
-    onCardClick();
-  });
-}
+    const initial = username
+      ? username.charAt(0).toUpperCase()
+      : '?';
 
-  const initial = username
-    ? username.charAt(0).toUpperCase()
-    : '?';
+    const isOnline = status === 'online';
 
-  const isOnline = status === 'online';
+    const statuses = { 
+      online: '🟢 Online', 
+      away: '🌙 Ausente', 
+      offline: '⚫ Offline' 
+    };
+    
+    const statusDisplay = statuses[status] || status || '🟢 Online';
 
-  const statusDisplay = (status === 'online' || status === 'offline')
-    ? (isOnline ? '● Online' : '○ Offline')
-    : status;
+    const avatarWrapper = document.createElement('div');
+    avatarWrapper.className = 'avatar-wrapper';
 
-  const avatarWrapper = document.createElement('div');
-  avatarWrapper.className = 'avatar-wrapper';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar-placeholder';
 
- const avatar = document.createElement('div');
-avatar.className = 'avatar-placeholder';
+    if (avatarUrl) {
+      const img = document.createElement('img');
+      img.src = avatarUrl;
+      img.alt = `Foto de ${username}`;
+      img.className = 'player-avatar';
 
-if (avatarUrl) {
-  const img = document.createElement('img');
-  img.src = avatarUrl;
-  img.alt = `Foto de ${username}`;
-  img.className = 'player-avatar';
+      img.onerror = () => {
+        img.remove();
+        avatar.textContent = initial;
+      };
 
-  img.onerror = () => {
-    img.remove();
-    avatar.textContent = initial;
-  };
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = initial;
+    }
 
-  avatar.appendChild(img);
-} else {
-  avatar.textContent = initial;
-}
+    const statusDot = document.createElement('span');
+    statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
+    avatarWrapper.append(avatar, statusDot);
 
-const statusDot = document.createElement('span');
-statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
-  avatarWrapper.append(avatar, statusDot);
+    const playerInfo = document.createElement('div');
+    playerInfo.className = 'player-info';
 
-  const playerInfo = document.createElement('div');
-  playerInfo.className = 'player-info';
+    const name = document.createElement('h3');
+    name.textContent = username || 'Jogador';
 
-  const name = document.createElement('h3');
-  name.textContent = username || 'Jogador';
+    const statusText = document.createElement('p');
+    statusText.className = 'player-status-text';
+    statusText.textContent = statusDisplay;
 
-  const statusText = document.createElement('p');
-  statusText.className = 'player-status-text';
-  statusText.textContent = statusDisplay;
+    playerInfo.append(name, statusText);
 
-  playerInfo.append(name, statusText);
+    const button = document.createElement('button');
+    button.className = `btn-action ${buttonStyleClass}`;
+    button.textContent = buttonText;
 
-  const button = document.createElement('button');
-  button.className = `btn-action ${buttonStyleClass}`;
-  button.textContent = buttonText;
+    button.addEventListener('click', action);
 
-  button.addEventListener('click', action);
+    card.append(avatarWrapper, playerInfo, button);
 
-  card.append(avatarWrapper, playerInfo, button);
-
-  return card;
-}
+    return card;
+  }
 
   async function getProfiles(ids) {
     const uniqueIds = [...new Set(ids)].filter(Boolean);
@@ -177,51 +192,51 @@ statusDot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
       return;
     }
 
-   // Identifica amizades já aceitas
-const acceptedPairs = new Set(
-  (requests || [])
-    .filter(item => item.status === 'accepted')
-    .map(item => [item.sender_id, item.receiver_id].sort().join('_'))
-);
+    // Identifica amizades já aceitas
+    const acceptedPairs = new Set(
+      (requests || [])
+        .filter(item => item.status === 'accepted')
+        .map(item => [item.sender_id, item.receiver_id].sort().join('_'))
+    );
 
-// Solicitações recebidas
-const received = (requests || []).filter(item => {
-  const pair = [item.sender_id, item.receiver_id].sort().join('_');
+    // Solicitações recebidas
+    const received = (requests || []).filter(item => {
+      const pair = [item.sender_id, item.receiver_id].sort().join('_');
 
-  return (
-    item.receiver_id === user.id &&
-    item.status === 'pending' &&
-    !acceptedPairs.has(pair)
-  );
-});
+      return (
+        item.receiver_id === user.id &&
+        item.status === 'pending' &&
+        !acceptedPairs.has(pair)
+      );
+    });
 
-// Solicitações enviadas
-const sent = (requests || []).filter(item => {
-  const pair = [item.sender_id, item.receiver_id].sort().join('_');
+    // Solicitações enviadas
+    const sent = (requests || []).filter(item => {
+      const pair = [item.sender_id, item.receiver_id].sort().join('_');
 
-  return (
-    item.sender_id === user.id &&
-    item.status === 'pending' &&
-    !acceptedPairs.has(pair)
-  );
-});
+      return (
+        item.sender_id === user.id &&
+        item.status === 'pending' &&
+        !acceptedPairs.has(pair)
+      );
+    });
 
-// Amizades aceitas sem duplicação
-const accepted = [];
-const addedFriends = new Set();
+    // Amizades aceitas sem duplicação
+    const accepted = [];
+    const addedFriends = new Set();
 
-for (const item of (requests || [])) {
-  if (item.status !== 'accepted') continue;
+    for (const item of (requests || [])) {
+      if (item.status !== 'accepted') continue;
 
-  const otherId = item.sender_id === user.id
-    ? item.receiver_id
-    : item.sender_id;
+      const otherId = item.sender_id === user.id
+        ? item.receiver_id
+        : item.sender_id;
 
-  if (addedFriends.has(otherId)) continue;
+      if (addedFriends.has(otherId)) continue;
 
-  addedFriends.add(otherId);
-  accepted.push(item);
-}
+      addedFriends.add(otherId);
+      accepted.push(item);
+    }
 
     const otherIds = (requests || []).map(item =>
       item.sender_id === user.id ? item.receiver_id : item.sender_id
@@ -259,158 +274,109 @@ for (const item of (requests || [])) {
       }
     }
 
-  // Renderizar Meus Amigos
-if (!accepted.length) {
-  friendsArea.append(createMessage('Você ainda não tem amigos adicionados.'));
-} else {
-  for (const friendship of accepted) {
-    const otherId = friendship.sender_id === user.id
-      ? friendship.receiver_id
-      : friendship.sender_id;
+    // Renderizar Meus Amigos
+    if (!accepted.length) {
+      friendsArea.append(createMessage('Você ainda não tem amigos adicionados.'));
+    } else {
+      for (const friendship of accepted) {
+        const otherId = friendship.sender_id === user.id
+          ? friendship.receiver_id
+          : friendship.sender_id;
 
-    const profile = profiles[otherId];
+        const profile = profiles[otherId];
 
-    friendsArea.append(
-      createPlayerCard(
-        profile?.username || 'Jogador',
-        profile?.status || 'Membro do NEXUS',
-        'Remover',
-        async () => {
-          if (!confirm('Deseja remover este amigo?')) return;
+        friendsArea.append(
+          createPlayerCard(
+            profile?.username || 'Jogador',
+            profile?.status || 'Membro do NEXUS',
+            'Remover',
+            async () => {
+              if (!confirm('Deseja remover este amigo?')) return;
 
-          const { error } = await supabase
-            .from('friend_requests')
-            .delete()
-            .eq('id', friendship.id);
+              const { error } = await supabase
+                .from('friend_requests')
+                .delete()
+                .eq('id', friendship.id);
 
-          if (error) {
-            notify('Não foi possível remover.');
-            return;
-          }
+              if (error) {
+                notify('Não foi possível remover.');
+                return;
+              }
 
-          notify('Amigo removido.');
-          loadData();
-        },
-        '',
-        profile?.avatar_url,
-        () => {
-          window.dispatchEvent(
-            new CustomEvent('nexus:open-friend-profile', {
-              detail: { userId: otherId }
-            })
-          );
+              notify('Amigo removido.');
+              loadData();
+            },
+            '',
+            profile?.avatar_url,
+            () => {
+              window.dispatchEvent(
+                new CustomEvent('nexus:open-friend-profile', {
+                  detail: { userId: otherId }
+                })
+              );
 
-          window.closeFriendsModal();
-        }
-      )
-    );
-  }
-}
+              window.closeFriendsModal();
+            }
+          )
+        );
+      }
+    }
 
-    
     // Renderizar Solicitações Enviadas
-if (!sent.length) {
-  sentArea.append(createMessage('Nenhuma solicitação enviada.'));
-} else {
-  for (const request of sent) {
-    const profile = profiles[request.receiver_id];
+    if (!sent.length) {
+      sentArea.append(createMessage('Nenhuma solicitação enviada.'));
+    } else {
+      for (const request of sent) {
+        const profile = profiles[request.receiver_id];
 
-    sentArea.append(
-      createPlayerCard(
-        profile?.username || 'Jogador',
-        'Aguardando resposta...',
-        'Cancelar',
-        async () => {
-          console.log('Iniciando cancelamento...');
-          console.log('ID da solicitação:', request.id);
-          console.log('ID do usuário:', user.id);
+        sentArea.append(
+          createPlayerCard(
+            profile?.username || 'Jogador',
+            'Aguardando resposta...',
+            'Cancelar',
+            async () => {
+              const confirmed = confirm(
+                'Deseja realmente cancelar esta solicitação?'
+              );
 
-          const confirmed = confirm(
-            'Deseja realmente cancelar esta solicitação?'
-          );
+              if (!confirmed) return;
 
-          if (!confirmed) return;
+              notify('Cancelando solicitação...');
 
-          notify('Cancelando solicitação...');
+              try {
+                const { data, error } = await supabase
+                  .from('friend_requests')
+                  .delete()
+                  .eq('id', request.id)
+                  .eq('sender_id', user.id)
+                  .eq('status', 'pending')
+                  .select('id');
 
-          try {
-            const { data, error } = await supabase
-              .from('friend_requests')
-              .delete()
-              .eq('id', request.id)
-              .eq('sender_id', user.id)
-              .eq('status', 'pending')
-              .select('id');
+                if (error) {
+                  notify('Erro: ' + error.message);
+                  return;
+                }
 
-            console.log('Resultado da exclusão:', data);
-            console.log('Erro do Supabase:', error);
+                if (!data || data.length === 0) {
+                  notify('Nenhuma solicitação foi excluída. Verifique as permissões RLS.');
+                  return;
+                }
 
-            if (error) {
-              notify('Erro: ' + error.message);
-              return;
-            }
+                notify('Solicitação cancelada! ❤️');
+                await loadData();
 
-            if (!data || data.length === 0) {
-              notify('Nenhuma solicitação foi excluída. Verifique as permissões RLS.');
-              return;
-            }
-
-            notify('Solicitação cancelada! ❤️');
-            await loadData();
-
-          } catch (err) {
-            console.error('Erro inesperado:', err);
-            notify('Falha ao cancelar: ' + err.message);
-          }
-        },
-        'pending',
-        profile?.avatar_url
-      )
-    );
+              } catch (err) {
+                console.error('Erro inesperado:', err);
+                notify('Falha ao cancelar: ' + err.message);
+              }
+            },
+            'pending',
+            profile?.avatar_url
+          )
+        );
+      }
+    }
   }
-}
-}
-
-/* ==========================================================================
-   ATUALIZAÇÃO AUTOMÁTICA DOS STATUS DOS AMIGOS
-   ========================================================================== */
-
-let profilesChannel = null;
-let refreshTimer = null;
-
-async function startProfilesRealtime() {
-  if (profilesChannel) return;
-
-  const user = await getCurrentUser();
-  if (!user) return;
-
-  profilesChannel = supabase
-    .channel('nexus-profiles-presence')
-    .on(
-      'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'profiles'
-      },
-      () => {
-        if (modalOverlay.style.display === 'flex') {
-          clearTimeout(refreshTimer);
-
-          refreshTimer = setTimeout(() => {
-            loadData();
-          }, 300);
-        }
-      }
-    )
-    .subscribe((status) => {
-      if (status === 'CHANNEL_ERROR') {
-        console.error('Erro na conexão Realtime dos perfis.');
-      }
-    });
-}
-
-startProfilesRealtime();
 
   async function searchPlayers() {
     const user = await getCurrentUser();
@@ -445,11 +411,11 @@ startProfilesRealtime();
       .select('sender_id, receiver_id, status')
       .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
 
-   for (const player of players) {
-     const existing = (existingRequests || []).find(request =>
-       (request.sender_id === user.id && request.receiver_id === player.id) ||
-       (request.sender_id === player.id && request.receiver_id === user.id)
-     );
+    for (const player of players) {
+      const existing = (existingRequests || []).find(request =>
+        (request.sender_id === user.id && request.receiver_id === player.id) ||
+        (request.sender_id === player.id && request.receiver_id === user.id)
+      );
 
       let buttonText = 'Adicionar';
       let buttonStyleClass = '';

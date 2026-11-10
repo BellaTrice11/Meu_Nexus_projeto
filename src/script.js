@@ -10,6 +10,129 @@ const STORAGE_KEY = 'nexusGamingV2';
 let appState = { posts: [], likes: {}, comments: {}, joined: {}, games: [] };
 let nexusCurrentUser = null;
 
+/* ==========================================================================
+   SISTEMA DE PRESENÇA
+   ========================================================================== */
+
+let presenceInterval = null;
+let awayTimeout = null;
+let lastActivity = Date.now();
+let lastPresenceStatus = null;
+
+async function updateMyPresence(status) {
+  if (!nexusCurrentUser || lastPresenceStatus === status) return;
+
+  lastPresenceStatus = status;
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      status,
+      last_seen: new Date().toISOString()
+    })
+    .eq('id', nexusCurrentUser.id);
+
+  if (error) {
+    lastPresenceStatus = null;
+    console.error('Erro ao atualizar presença:', error);
+  }
+}
+
+function registerActivity() {
+  lastActivity = Date.now();
+
+  if (document.visibilityState !== 'visible') return;
+
+  updateMyPresence('online');
+
+  clearTimeout(awayTimeout);
+
+  awayTimeout = setTimeout(() => {
+    updateMyPresence('away');
+  }, 5 * 60 * 1000);
+}
+
+function startPresence() {
+  if (!nexusCurrentUser) return;
+
+  clearInterval(presenceInterval);
+  clearTimeout(awayTimeout);
+
+  lastActivity = Date.now();
+  lastPresenceStatus = null;
+
+  registerActivity();
+
+  presenceInterval = setInterval(() => {
+    const inactiveTime = Date.now() - lastActivity;
+
+    if (document.visibilityState !== 'visible') return;
+
+    if (inactiveTime >= 5 * 60 * 1000) {
+      updateMyPresence('away');
+    } else {
+      updateMyPresence('online');
+    }
+
+    supabase
+      .from('profiles')
+      .update({ last_seen: new Date().toISOString() })
+      .eq('id', nexusCurrentUser.id)
+      .then(({ error }) => {
+        if (error) console.error('Erro no heartbeat:', error);
+      });
+
+  }, 10000);
+}
+
+document.addEventListener('mousemove', registerActivity);
+document.addEventListener('keydown', registerActivity);
+document.addEventListener('click', registerActivity);
+document.addEventListener('touchstart', registerActivity);
+
+// Alterna o status ao minimizar (away) e maximizar/voltar à aba (online)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    registerActivity();
+  } else {
+    updateMyPresence('away');
+  }
+});
+
+// Atualiza para offline no instante em que o navegador/aba for fechado
+window.addEventListener('beforeunload', () => {
+  if (!nexusCurrentUser) return;
+
+  const url = `${supabase.supabaseUrl}/rest/v1/profiles?id=eq.${nexusCurrentUser.id}`;
+  const payload = JSON.stringify({
+    status: 'offline',
+    last_seen: new Date().toISOString()
+  });
+
+  // Tenta o envio imediato via navigator.sendBeacon
+  if (navigator.sendBeacon) {
+    const blob = new Blob([payload], { type: 'application/json' });
+    const headers = {
+      'apikey': supabase.supabaseKey,
+      'Authorization': `Bearer ${supabase.auth.session()?.access_token || supabase.supabaseKey}`,
+      'Prefer': 'return=minimal'
+    };
+    navigator.sendBeacon(url, blob);
+  } else {
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabase.supabaseKey,
+        'Authorization': `Bearer ${supabase.auth.session()?.access_token || supabase.supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: payload,
+      keepalive: true
+    }).catch(() => {});
+  }
+});
+
 export function notify(message) {
   if (!toast) return;
   toast.textContent = message;
@@ -396,6 +519,7 @@ export function showView(view) {
   main.appendChild(page);
   main.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 /* ==========================================================================
    ABRIR PERFIL DE OUTRO JOGADOR
    ========================================================================== */
@@ -463,6 +587,7 @@ document.addEventListener('click', async (event) => {
   const logoutBtn = target.closest('#logout-btn');
   if (logoutBtn) {
     try {
+      await updateMyPresence('offline');
       await supabase.auth.signOut();
     } catch (e) {
       console.error(e);
@@ -532,19 +657,18 @@ document.addEventListener('click', async (event) => {
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-   const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
 
-if (sessionError || !currentSession) {
-  location.replace('./login.html');
-  return;
-}
-
+    if (sessionError || !currentSession) {
+      location.replace('./login.html');
+      return;
+    }
 
     const appElement = document.getElementById('app');
     if (appElement) appElement.hidden = false;
 
     // Inicializa o sistema de amigos
-initFriendsModal(supabase, notify);
+    initFriendsModal(supabase, notify);
 
     loadState();
     restoreSavedPosts();
@@ -669,6 +793,8 @@ async function updateHomeProfile() {
     const profile = await loadNexusProfile();
     if (!profile) return;
 
+    startPresence();
+
     const name = document.getElementById('homeProfileName');
     const status = document.getElementById('homeProfileStatus');
     const photo = document.getElementById('homeProfilePhoto');
@@ -711,7 +837,7 @@ function extensionFrom(file) {
 window.addEventListener('nexus:open-profile', async (event) => {
   const page = event.detail.page;
 
-    const targetUserId = event.detail.userId;
+  const targetUserId = event.detail.userId;
   const readOnly = event.detail.readOnly === true;
 
   const photo = page.querySelector('#profile-photo');
@@ -733,27 +859,27 @@ window.addEventListener('nexus:open-profile', async (event) => {
   const message = page.querySelector('#profile-message');
 
   try {
-   let profile;
+    let profile;
 
-if (readOnly) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id, username, status, avatar_url, cover_url, profile_theme')
-    .eq('id', targetUserId)
-    .maybeSingle();
+    if (readOnly) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, username, status, avatar_url, cover_url, profile_theme')
+        .eq('id', targetUserId)
+        .maybeSingle();
 
-  if (error) throw error;
+      if (error) throw error;
 
-  if (!data) {
-    throw new Error('Perfil deste jogador não encontrado.');
-  }
+      if (!data) {
+        throw new Error('Perfil deste jogador não encontrado.');
+      }
 
-  profile = data;
-} else {
-  profile = await loadNexusProfile();
-}
+      profile = data;
+    } else {
+      profile = await loadNexusProfile();
+    }
 
-if (!profile) throw new Error('Usuário não encontrado.');
+    if (!profile) throw new Error('Usuário não encontrado.');
     if (customization) customization.hidden = true;
     if (photoLabel) photoLabel.hidden = true;
     if (photo) photo.hidden = !profile.avatar_url;
@@ -763,14 +889,14 @@ if (!profile) throw new Error('Usuário não encontrado.');
       if (photoLabel) photoLabel.hidden = false;
     }
 
-   if (!readOnly) {
-  if (editButton) editButton.addEventListener('click', openProfileEditor);
+    if (!readOnly) {
+      if (editButton) editButton.addEventListener('click', openProfileEditor);
 
-  if (photo) {
-    photo.addEventListener('click', openProfileEditor);
-    photo.style.cursor = 'pointer';
-  }
-}
+      if (photo) {
+        photo.addEventListener('click', openProfileEditor);
+        photo.style.cursor = 'pointer';
+      }
+    }
     if (nameInput) nameInput.value = profile.username || '';
     if (gamerName) gamerName.textContent = profile.username || 'Gamer';
     if (statusSelect) statusSelect.value = profile.status || 'online';
@@ -799,21 +925,21 @@ if (!profile) throw new Error('Usuário não encontrado.');
     updateTheme();
     updateStatusText();
     if (readOnly) {
-  if (customization) customization.hidden = true;
-  if (editButton) editButton.hidden = true;
-  if (photoLabel) photoLabel.hidden = true;
-  if (photoInput) photoInput.hidden = true;
-  if (coverInput) coverInput.hidden = true;
-  if (saveButton) saveButton.hidden = true;
-  if (message) message.hidden = true;
+      if (customization) customization.hidden = true;
+      if (editButton) editButton.hidden = true;
+      if (photoLabel) photoLabel.hidden = true;
+      if (photoInput) photoInput.hidden = true;
+      if (coverInput) coverInput.hidden = true;
+      if (saveButton) saveButton.hidden = true;
+      if (message) message.hidden = true;
 
-  if (photo) {
-    photo.style.cursor = 'default';
-    photo.style.pointerEvents = 'none';
-  }
+      if (photo) {
+        photo.style.cursor = 'default';
+        photo.style.pointerEvents = 'none';
+      }
 
-  return;
-}
+      return;
+    }
 
     if (themeSelect) {
       themeSelect.addEventListener('change', () => {
@@ -824,7 +950,13 @@ if (!profile) throw new Error('Usuário não encontrado.');
       });
     }
 
-    if (statusSelect) statusSelect.addEventListener('change', updateStatusText);
+    if (statusSelect) {
+      statusSelect.addEventListener('change', () => {
+        updateStatusText();
+        // Atualiza a variável local imediatamente ao alterar o seletor no perfil
+        lastPresenceStatus = statusSelect.value;
+      });
+    }
 
     if (coverInput) {
       coverInput.addEventListener('change', async () => {
@@ -956,6 +1088,9 @@ if (!profile) throw new Error('Usuário não encontrado.');
             .eq('id', nexusCurrentUser.id);
 
           if (error) throw error;
+
+          // Atualiza o estado da presença local para sincronizar imediatamente
+          lastPresenceStatus = statusSelect.value;
 
           if (gamerName) gamerName.textContent = username;
           updateStatusText();
